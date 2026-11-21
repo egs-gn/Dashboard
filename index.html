@@ -800,7 +800,7 @@ window.addEventListener('pageshow', lockDashboard);
 
 <script>
 const API_KEY = 'AIzaSyBGi02CYa3xGola8YvLXJqXQKZDY70x3es';
-const SHEET_FLOTTE = '1XsKv2yARIifa53jnBWd8zVgByu15FIchQQGA1tJHOOs';
+const SHEET_FLOTTE = '1owuImjBselIpccnOT5iklgYJ04jGQ88yx5Fcfw1uHSE';
 const SHEET_INV = '1TYNVmVCpOr6zJvj05hQ3OLKGIz2nJAwOYmUH-sK8XwE';
 const SHEET_TIG = '1_bP51V7DkznH0qJUUBEt4eJR8V4EU-uBeS8_QSy9GUc';
 const SHEET_BENEVOLAT = '1OlWr2nJLA5z3hpxi-K25qKt9XHNTv6Aikuuk1PVw5Yw';
@@ -896,7 +896,7 @@ function buildVehicleResolver(rows, vehicleColumn) {
   rows.forEach(row => {
     const label = String(row[vehicleColumn] || '').trim();
     const key = vehicleKey(label);
-    if (!labels.has(key)) labels.set(key, label);
+    if (label) labels.set(key, label); // garde le libellé le plus récent
   });
   return value => labels.get(vehicleKey(value)) || String(value || '').trim();
 }
@@ -906,23 +906,33 @@ async function loadFlotte() {
   document.getElementById('flotte-content').style.display = 'none';
   document.getElementById('flotte-error').style.display = 'none';
   try {
-    const rows = await fetchSheet(SHEET_FLOTTE, 'A:O');
+    const rows = await fetchSheet(SHEET_FLOTTE, "'Form Responses 1'!A:S");
     if (rows.length < 2) throw new Error('Données insuffisantes.');
-    const data = rows.slice(1).filter(r => r[0] && r[1]);
 
-    const iDate=0, iChauffeur=1, iVehicule=2, iMoment=3, iKm=4;
-    const iLiquides=7, iFeux=9, iDommage=10, iDesc=11, iPhoto=12;
+    // Horodatage du nouveau Sheet au format US (M/D/YYYY H:mm:ss) -> DD/MM/YYYY
+    const toFrDate = v => {
+      const s = String(v || '').trim().split(' ')[0];
+      const p = s.split('/');
+      if (p.length !== 3) return '';
+      return p[1].padStart(2, '0') + '/' + p[0].padStart(2, '0') + '/' + p[2];
+    };
+
+    const iDate=0, iMoment=1, iChauffeur=2, iVehicule=5, iKm=6;
+    const iLiquides=12, iFeux=14, iDommage=15, iDesc=16, iPhoto=17;
+    const KM_MAX_JOUR = 1000; // au-delà = faute de saisie (ex. « 0809 » au lieu de « 9809 »)
+
+    const data = rows.slice(1).filter(r => r[iDate] && r[iChauffeur]);
 
     const chauffeurs = {}, vehicules = {}, kmParJourVehicule = {}, incidents = [];
     const departsKm = {};
     const resolveVehicle = buildVehicleResolver(data, iVehicule);
 
     data.forEach((r, rowIndex) => {
-      const chauffeur = r[iChauffeur] || '';
+      const chauffeur = String(r[iChauffeur] || '').trim();
       const vehicule = resolveVehicle(r[iVehicule]);
-      const moment = (r[iMoment] || '').toLowerCase();
-      const km = parseFloat(r[iKm]) || 0;
-      const date = (r[iDate] || '').split(' ')[0];
+      const moment = String(r[iMoment] || '').toLowerCase();
+      const km = parseFloat(String(r[iKm] || '').replace(/\s/g, '').replace(',', '.')) || 0;
+      const date = toFrDate(r[iDate]);
       const key = vehicule + '|' + date;
 
       chauffeurs[chauffeur] = (chauffeurs[chauffeur] || 0) + 1;
@@ -932,14 +942,14 @@ async function loadFlotte() {
       }
       if (moment.includes('retour') && departsKm[key] !== undefined) {
         const diff = km - departsKm[key];
-        if (diff > 0) {
+        if (diff > 0 && diff <= KM_MAX_JOUR) {
           if (!kmParJourVehicule[date]) kmParJourVehicule[date] = {};
           kmParJourVehicule[date][vehicule] = (kmParJourVehicule[date][vehicule] || 0) + diff;
         }
       }
-      const nouveauDommage = !!(r[iDesc] && r[iDesc].trim() !== '');
-      const problLiquide = !!(r[iLiquides] && r[iLiquides].trim() !== '');
-      const problFeux = !!(r[iFeux] && r[iFeux].trim() !== '');
+      const nouveauDommage = !!(r[iDesc] && String(r[iDesc]).trim() !== '');
+      const problLiquide = !!(r[iLiquides] && String(r[iLiquides]).trim() !== '');
+      const problFeux = !!(r[iFeux] && String(r[iFeux]).trim() !== '');
       if (nouveauDommage || problLiquide || problFeux) {
         let types = [];
         if (nouveauDommage) types.push('Dommage carrosserie');
@@ -1001,7 +1011,7 @@ async function loadFlotte() {
       .sort((a, b) => b.parsedDate - a.parsedDate || b.rowIndex - a.rowIndex);
 
     const dernierIncidentSemaine = incidentsSemaine[0] || null;
-    const allDates = [...new Set(data.map(r => (r[iDate]||'').split(' ')[0]).filter(Boolean))].sort();
+    const allDates = [...new Set(data.map(r => toFrDate(r[iDate])).filter(Boolean))].sort();
 
     const kmSemaine = {}, kmSemaineDerniere = {}, kmMois = {};
     vehiculeLabels.forEach(v => {
