@@ -4,553 +4,233 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Emmaüs Grand Sud</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
 <style>
+:root {
+  --navy: #13285F;
+  --navy-2: #1A2B5E;
+  --blue: #2A3E8F;
+  --blue-3: #5B7BD6;
+  --blue-soft: #EEF2FF;
+  --ref: #C9D2EA;
+  --yellow: #F5C842;
+  --yellow-soft: #FFF6D9;
+  --yellow-ink: #8A6500;
+  --bg: #F0F2F8;
+  --card: #FFFFFF;
+  --line: #E4E8F1;
+  --track: #EEF1F7;
+  --ink: #0F172A;
+  --ink-2: #334155;
+  --muted: #64748B;
+  --faint: #94A3B8;
+  --good: #15803D;
+  --good-bg: #E7F6EC;
+  --warn: #B45309;
+  --warn-bg: #FEF3DC;
+  --bad: #B91C1C;
+  --bad-bg: #FDECEC;
+  --radius: 16px;
+  --shadow: 0 1px 2px rgba(15,23,42,.04), 0 6px 20px rgba(19,40,95,.05);
+}
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F0F2F8; min-height: 100vh; padding: 0; }
-.dash { max-width: 1180px; margin: 0 auto; background: #F0F2F8; padding-bottom: 20px; }
-.dash-top { position: relative; overflow: hidden; background: linear-gradient(135deg, #13285F 0%, #1A2B5E 58%, #10265F 100%); min-height: 220px; padding: 34px 38px; border-radius: 18px; margin: 20px 28px 0; box-shadow: 0 12px 30px rgba(26,43,94,0.16); display: flex; align-items: center; }
-.dash-top::before, .dash-top::after { content: none !important; display: none !important; }
-.dash-brand { position: relative; z-index: 1; display: flex; align-items: center; gap: 26px; width: 100%; min-height: 150px; margin-bottom: 0; }
-.dash-logo-circle { width: 146px; height: 146px; flex: 0 0 146px; border-radius: 50%; background: #fff; border: 5px solid rgba(255,255,255,0.22); box-shadow: 0 10px 26px rgba(0,0,0,0.20); display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden; }
-.dash-logo-circle img { width: 74% !important; height: 74% !important; max-width: 74% !important; max-height: 74% !important; object-fit: contain !important; object-position: center center !important; display: block; border-radius: 0 !important; }
-.dash-brand-name { font-size: 34px; line-height: 1.1; font-weight: 650; color: #fff; letter-spacing: -0.5px; white-space: nowrap; }
-.dash-brand-sub { font-size: 18px; color: rgba(255,255,255,0.78); margin-top: 10px; }
-.dash-ts { margin-left: auto; font-size: 13px; color: rgba(255,255,255,0.68); display: flex; align-items: center; gap: 7px; white-space: nowrap; }
-.refresh-btn { background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.24); color: #fff; font-size: 13px; padding: 9px 15px; border-radius: 9px; cursor: pointer; display: flex; align-items: center; gap: 7px; margin-left: 10px; backdrop-filter: blur(4px); }
-.refresh-btn:hover { background: rgba(255,255,255,0.15); }
-.dash-tabs { display: flex; gap: 0; padding-left: 92px; }
-.dash-tab { font-size: 13px; padding: 11px 20px; color: rgba(255,255,255,0.45); border-bottom: 2px solid transparent; cursor: pointer; display: flex; align-items: center; gap: 6px; background: none; border-left: none; border-right: none; border-top: none; font-family: inherit; }
-.dash-tab.active { color: #fff; border-bottom: 2px solid #F5C842; font-weight: 500; }
-.dash-body { padding: 16px 28px 28px; }
-.section-label { font-size: 10px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.7px; margin-bottom: 10px; }
-.hero-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-.hero-card { background: #fff; border-radius: 12px; border: 0.5px solid rgba(0,0,0,0.07); overflow: hidden; display: flex; flex-direction: column; }
-.hero-card-inner { padding: 16px 18px 16px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-.hero-card-label { font-size: 10px; font-weight: 600; color: #64748B; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
-.hero-card-value { font-size: 30px; font-weight: 500; color: #0F172A; line-height: 1; }
-.hero-card-sub { font-size: 11px; color: #64748B; margin-top: 6px; display: flex; align-items: center; gap: 6px; }
-.hero-card-bar { height: 3px; background: #EEF0F6; }
-.hero-card-bar-fill { height: 3px; border-radius: 0 2px 2px 0; transition: width 0.6s; }
-.charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-.card { background: #fff; border-radius: 12px; border: 0.5px solid rgba(0,0,0,0.07); padding: 16px 18px; }
-.card-title { font-size: 13px; font-weight: 500; color: #0F172A; margin-bottom: 2px; }
-.card-ct { font-size: 11px; color: #64748B; margin-bottom: 14px; }
-.pie-wrap { display: flex; align-items: center; gap: 14px; }
-.pie-leg { display: flex; flex-direction: column; gap: 8px; flex: 1; }
-.pie-leg-item { display: flex; align-items: center; gap: 7px; }
-.pie-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.pie-leg-name { font-size: 11px; color: #0F172A; flex: 1; }
-.pie-leg-bar-wrap { width: 50px; background: #EEF0F6; border-radius: 3px; height: 4px; overflow: hidden; }
-.pie-leg-bar { height: 4px; border-radius: 3px; }
-.pie-leg-pct { font-size: 10px; font-weight: 600; color: #64748B; min-width: 28px; text-align: right; }
-.truck-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 16px; }
-.truck-card { background: #fff; border-radius: 12px; border: 0.5px solid rgba(0,0,0,0.07); padding: 14px 10px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.truck-ic { width: 40px; height: 40px; border-radius: 10px; background: #EEF2FF; display: flex; align-items: center; justify-content: center; margin-bottom: 3px; }
-.truck-ic i { font-size: 20px; color: #2A3E8F; }
-.truck-vname { font-size: 11px; font-weight: 500; color: #0F172A; text-align: center; }
-.truck-plate { font-size: 9px; color: #64748B; background: #F1F5F9; border-radius: 3px; padding: 1px 7px; letter-spacing: 0.7px; }
-.truck-km { font-size: 20px; font-weight: 500; color: #1A2B5E; margin-top: 2px; }
-.truck-lbl { font-size: 9px; color: #94A3B8; }
-.inc-card { background: #FFFBEB; border: 0.5px solid #FDE68A; border-radius: 12px; overflow: hidden; }
-.inc-head { padding: 11px 16px; display: flex; align-items: center; gap: 7px; border-bottom: 0.5px solid #FDE68A; }
-.inc-head-txt { font-size: 12px; font-weight: 500; color: #92400E; }
-.inc-row { padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
-.inc-meta { font-size: 10px; color: #92400E; font-weight: 500; margin-bottom: 2px; }
-.inc-desc { font-size: 12px; color: #0F172A; }
-.inc-badge { background: #FEF3C7; color: #92400E; font-size: 10px; font-weight: 500; padding: 2px 8px; border-radius: 5px; white-space: nowrap; }
-.inc-link { font-size: 11px; color: #2A3E8F; text-decoration: none; white-space: nowrap; }
-.inc-link:hover { text-decoration: underline; }
-.podium-wrap { display: flex; align-items: flex-end; justify-content: center; gap: 10px; padding: 8px 0 0; }
-.podium-col { display: flex; flex-direction: column; align-items: center; gap: 2px; justify-content: flex-end; }
-.podium-bar { border-radius: 4px 4px 0 0; }
-.podium-name { font-size: 10px; font-weight: 500; color: #0F172A; }
-.podium-count { font-size: 9px; color: #64748B; }
-.plate-badge { background: #EEF2FF; color: #2A3E8F; font-size: 10px; font-weight: 500; padding: 1px 8px; border-radius: 4px; letter-spacing: 0.5px; }
-.tab-panel { display: block; }
-.section-divider { display: flex; align-items: center; gap: 10px; background: #1A2B5E; color: #fff; font-size: 13px; font-weight: 600; padding: 10px 18px; border-radius: 10px; margin: 20px 0 14px; letter-spacing: 0.4px; }
-.section-divider i { font-size: 16px; }
-.inv-card { background: #fff; border-radius: 12px; border: 0.5px solid rgba(0,0,0,0.07); padding: 16px 18px; margin-bottom: 12px; }
-.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; font-size: 12px; }
-.bar-size { min-width: 32px; color: #64748B; font-size: 11px; }
-.bar-bg { flex: 1; background: #EEF0F6; border-radius: 4px; height: 8px; overflow: hidden; }
-.bar-fill { height: 8px; border-radius: 4px; transition: width 0.4s; }
-.bar-qty { min-width: 22px; font-weight: 500; color: #0F172A; font-size: 12px; text-align: right; }
-.badge { display: inline-block; font-size: 10px; padding: 1px 7px; border-radius: 5px; font-weight: 500; }
-.loading { display: flex; align-items: center; justify-content: center; padding: 3rem; color: #64748B; font-size: 14px; gap: 10px; }
-.spinner { width: 18px; height: 18px; border: 2px solid #ddd; border-top-color: #1A2B5E; border-radius: 50%; animation: spin 0.8s linear infinite; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg); color: var(--ink); min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+.num { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+/* ---------- En-tête ---------- */
+.dash { max-width: 1240px; margin: 0 auto; padding: 20px 24px 40px; }
+.topbar + .grid { margin-top: 18px; }
+.topbar {
+  position: relative; overflow: hidden;
+  background: linear-gradient(120deg, #13285F 0%, #1A2B5E 60%, #10265F 100%);
+  border-radius: 20px; padding: 20px 24px;
+  display: flex; align-items: center; gap: 18px; color: #fff;
+  box-shadow: 0 10px 28px rgba(19,40,95,.18);
+}
+.topbar::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--yellow);
+}
+.logo { width: 64px; height: 64px; flex: 0 0 64px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 0 0 4px rgba(255,255,255,.14); }
+.logo img { width: 76%; height: 76%; object-fit: contain; display: block; }
+.brand-name { font-size: 22px; font-weight: 700; letter-spacing: -.3px; line-height: 1.15; }
+.brand-sub { font-size: 13px; color: rgba(255,255,255,.72); margin-top: 3px; }
+.top-actions { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+.stamp { font-size: 12px; color: rgba(255,255,255,.72); display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.refresh-btn {
+  background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.22); color: #fff;
+  font: 500 13px/1 inherit; font-family: inherit; padding: 10px 14px; border-radius: 10px; cursor: pointer;
+  display: flex; align-items: center; gap: 7px;
+}
+.refresh-btn:hover { background: rgba(255,255,255,.18); }
+.refresh-btn i { font-size: 15px; }
+
+.chip { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.chip i { font-size: 13px; }
+.chip.up { background: var(--good-bg); color: var(--good); }
+.chip.down { background: var(--bad-bg); color: var(--bad); }
+.chip.flat { background: var(--track); color: var(--muted); }
+
+/* ---------- Grille & panneaux ---------- */
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: 18px; }
+.span-12 { grid-column: span 12; } .span-7 { grid-column: span 7; } .span-5 { grid-column: span 5; } .span-6 { grid-column: span 6; }
+.panel { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px 22px 22px; min-width: 0; }
+.panel-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.panel-ic { width: 36px; height: 36px; flex: 0 0 36px; border-radius: 10px; background: var(--navy-2); color: var(--yellow); display: grid; place-items: center; font-size: 19px; }
+.panel-title { font-size: 16px; font-weight: 700; color: var(--navy); letter-spacing: -.2px; }
+.panel-sub { font-size: 12px; color: var(--muted); margin-top: 1px; }
+.panel-meta { margin-left: auto; text-align: right; font-size: 12px; color: var(--muted); }
+.panel-meta b { display: block; font-size: 20px; font-weight: 700; color: var(--navy); letter-spacing: -.4px; }
+.eyebrow { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 10px; }
+
+.loading { display: flex; align-items: center; justify-content: center; padding: 40px 0; color: var(--muted); font-size: 13px; gap: 10px; }
+.spinner { width: 16px; height: 16px; border: 2px solid #DDE3EE; border-top-color: var(--navy-2); border-radius: 50%; animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.error-box { background: #FCEBEB; color: #A32D2D; border-radius: 8px; padding: 14px; font-size: 13px; margin-bottom: 1rem; }
-@media (max-width: 700px) { .hero-row, .charts-row { grid-template-columns: 1fr; } .truck-row { grid-template-columns: 1fr 1fr; } .dash-body { padding: 16px; } .dash-top { min-height: auto; padding: 24px 20px; margin: 14px 14px 0; } .dash-brand { min-height: 0; gap: 16px; flex-wrap: wrap; } .dash-logo-circle { width: 102px; height: 102px; flex-basis: 102px; padding: 0; } .dash-brand-name { font-size: 24px; } .dash-brand-sub { font-size: 14px; margin-top: 6px; } .dash-brand > div:last-child { width: 100%; margin-left: 0 !important; justify-content: flex-end; } }
+.error-box { background: var(--bad-bg); color: var(--bad); border-radius: 10px; padding: 12px 14px; font-size: 13px; }
 
+/* ---------- Flotte ---------- */
+.fleet-top { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 14px; margin-bottom: 22px; }
+.tile { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; min-width: 0; }
+.veh-name { font-size: 17px; font-weight: 700; color: var(--navy); margin-top: 2px; }
+.brand { flex: 1; min-width: 0; }
+.plate { white-space: nowrap; display: inline-block; font-size: 11px; font-weight: 600; color: var(--blue); background: var(--blue-soft); border-radius: 5px; padding: 2px 7px; letter-spacing: .6px; font-variant-numeric: tabular-nums; }
+.meter { height: 8px; background: var(--track); border-radius: 999px; overflow: hidden; }
+.meter > span { display: block; height: 100%; border-radius: 999px; background: var(--navy-2); }
+.veh-share { display: flex; align-items: baseline; justify-content: space-between; margin: 14px 0 6px; font-size: 12px; color: var(--muted); }
+.veh-share b { font-size: 22px; color: var(--navy); font-weight: 700; letter-spacing: -.4px; }
 
-/* ===== Inventaire chaussures — grille de cartes ===== */
-.shoe-inventory-panel {
-  background: #fff;
-  border: 0.5px solid rgba(0,0,0,0.07);
-  border-radius: 16px;
-  padding: 22px;
-  box-shadow: 0 2px 10px rgba(15,23,42,0.03);
-}
-.shoe-inventory-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #13285F;
-  font-size: 15px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .25px;
-  margin-bottom: 20px;
-}
-.shoe-inventory-title i { font-size: 23px; }
-.shoe-grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 18px;
-}
-.shoe-size-card {
-  min-height: 205px;
-  border-radius: 12px;
-  border: 1px solid;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 25px 12px 22px;
-  transition: transform .18s ease, box-shadow .18s ease;
-}
-.shoe-size-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(15,23,42,.07);
-}
-.shoe-size-card.available {
-  background: linear-gradient(145deg, #FCFFFC 0%, #F0F8F1 100%);
-  border-color: #CBE4CF;
-  color: #087A24;
-}
-.shoe-size-card.empty {
-  background: linear-gradient(145deg, #FFFDFD 0%, #FFF0F0 100%);
-  border-color: #F7C7C7;
-  color: #ED1C24;
-}
-.shoe-size-number {
-  font-size: 27px;
-  line-height: 1;
-  font-weight: 750;
-}
-.shoe-icons {
-  min-height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  width: 100%;
-}
-.shoe-icons svg {
-  width: 45px;
-  height: 34px;
-  display: block;
-  flex: 0 1 auto;
-}
-.shoe-icons.count-3 svg { width: 38px; }
-.shoe-icons.count-4 svg { width: 31px; }
-.shoe-stock-label {
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .1px;
-}
-@media (max-width: 980px) {
-  .shoe-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-@media (max-width: 600px) {
-  .shoe-inventory-panel { padding: 15px; }
-  .shoe-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .shoe-size-card { min-height: 165px; padding: 18px 8px 16px; }
-  .shoe-icons svg, .shoe-icons.count-3 svg, .shoe-icons.count-4 svg { width: 34px; }
-}
+.rank { display: flex; flex-direction: column; gap: 9px; }
+.rank-row { display: grid; grid-template-columns: 20px 92px 1fr 54px; align-items: center; gap: 8px; font-size: 13px; }
+.rank-pos { width: 20px; height: 20px; border-radius: 6px; background: var(--track); color: var(--muted); font-size: 11px; font-weight: 700; display: grid; place-items: center; }
+.rank-row:first-child .rank-pos { background: var(--yellow); color: var(--navy); }
+.rank-name { font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank-bar { height: 10px; background: var(--track); border-radius: 999px; overflow: hidden; }
+.rank-bar > span { display: block; height: 100%; border-radius: 999px; background: var(--blue-3); }
+.rank-row:first-child .rank-bar > span { background: var(--navy-2); }
+.rank-val { text-align: right; color: var(--muted); font-size: 12px; }
+.rank-val b { color: var(--ink); font-weight: 600; }
 
+.status { display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+.status.ok { background: var(--good-bg); border-color: #CDEBD7; }
+.status.ko { background: var(--bad-bg); border-color: #F5CACA; }
+.status-line { display: flex; align-items: center; gap: 10px; }
+.status-ic { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; font-size: 20px; background: #fff; }
+.status.ok .status-ic { color: var(--good); } .status.ko .status-ic { color: var(--bad); }
+.status-title { font-size: 15px; font-weight: 700; }
+.status.ok .status-title { color: var(--good); } .status.ko .status-title { color: var(--bad); }
+.status-sub { font-size: 12px; color: var(--ink-2); }
+.inc-box { background: #fff; border-radius: 10px; padding: 10px 12px; font-size: 12px; color: var(--ink-2); }
+.inc-box .meta { font-weight: 600; color: var(--bad); margin-bottom: 3px; }
+.inc-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+.inc-tag { font-size: 11px; font-weight: 600; color: var(--bad); background: var(--bad-bg); padding: 2px 7px; border-radius: 5px; }
+.inc-tag.link { color: var(--blue); background: var(--blue-soft); text-decoration: none; display: inline-flex; gap: 3px; align-items: center; }
 
-/* ===== Indicateurs Stage & Bénévolat ===== */
-.hours-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  margin-top: 20px;
-}
-.hours-card {
-  background: #fff;
-  border: 0.5px solid rgba(0,0,0,0.07);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 5px 18px rgba(15,23,42,.05);
-}
-.hours-card-head {
-  height: 64px;
-  padding: 0 26px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: linear-gradient(135deg, #13285F 0%, #1A2B5E 100%);
-  color: #fff;
-  font-size: 18px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .4px;
-}
-.hours-card-head i { font-size: 24px; }
-.hours-card-body {
-  min-height: 130px;
-  padding: 24px 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 28px;
-}
-.hours-icon {
-  width: 72px;
-  height: 72px;
-  flex: 0 0 72px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.hours-icon i { font-size: 38px; }
-.hours-stage .hours-icon { background: #FFF6DE; color: #F5B51B; }
-.hours-volunteer .hours-icon { background: #EEF2FF; color: #315BC6; }
-.hours-label {
-  color: #64748B;
-  font-size: 15px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .8px;
-  margin-bottom: 10px;
-}
-.hours-value {
-  color: #13285F;
-  font-size: clamp(38px, 4vw, 56px);
-  line-height: 1;
-  font-weight: 500;
-  white-space: nowrap;
-}
-.hours-accent { height: 5px; }
-.hours-stage .hours-accent { background: #F5C842; }
-.hours-volunteer .hours-accent { background: #315BC6; }
-.hours-status { padding: 14px; text-align: center; color: #64748B; font-size: 13px; }
-@media (max-width: 820px) {
-  .hours-grid { grid-template-columns: 1fr; }
-}
-@media (max-width: 520px) {
-  .hours-card-body { padding: 22px 20px; gap: 16px; min-height: 120px; }
-  .hours-icon { width: 62px; height: 62px; flex-basis: 62px; }
-  .hours-icon i { font-size: 32px; }
-  .hours-card-head { height: 56px; padding: 0 20px; font-size: 16px; }
-}
+.km-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.km-table th { text-align: left; font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; padding: 0 10px 8px; border-bottom: 1px solid var(--line); }
+.km-table th.r, .km-table td.r { text-align: right; }
+.km-table td { padding: 11px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.km-table tr:last-child td { border-bottom: 0; }
+.km-veh { display: flex; align-items: center; gap: 10px; }
+.km-veh i { width: 32px; height: 32px; border-radius: 9px; background: var(--blue-soft); color: var(--blue); display: grid; place-items: center; font-size: 17px; flex: 0 0 32px; }
+.km-veh b { display: block; font-weight: 600; color: var(--ink); }
+.km-week { display: grid; grid-template-columns: 1fr 70px; align-items: center; gap: 12px; min-width: 180px; }
+.km-week .meter { height: 8px; }
+.km-week b { text-align: right; font-weight: 700; color: var(--navy); font-size: 14px; }
+.km-table tr.idle td { color: var(--faint); }
+.km-table tr.idle .km-veh b, .km-table tr.idle .km-week b { color: var(--faint); font-weight: 500; }
+.km-table tr.idle .km-veh i { background: #F4F6FA; color: #C3CBD9; }
+.km-table tr.idle .plate { color: var(--faint); background: #F4F6FA; }
+.km-total td { font-weight: 700; color: var(--navy); background: #F8FAFD; }
 
+/* ---------- Barres horizontales (livraisons, comparaisons) ---------- */
+.hbars { display: flex; flex-direction: column; gap: 8px; }
+.hbar { display: grid; grid-template-columns: 112px 1fr 92px; align-items: center; gap: 12px; font-size: 13px; padding: 2px 0; border-radius: 6px; }
+.hbar:hover { background: #F7F9FC; }
+.hbar-label { color: var(--ink-2); font-weight: 500; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hbar-track { height: 14px; border-radius: 4px; }
+.hbar-track > span { display: block; height: 100%; min-width: 3px; border-radius: 0 4px 4px 0; background: var(--blue); }
+.hbar:first-child .hbar-track > span { background: var(--navy-2); }
+.hbar-val { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 12px; }
+.hbar-val b { color: var(--ink); font-weight: 700; font-size: 13px; margin-right: 4px; }
 
-/* ===== Sections principales harmonisées avec Stage & Bénévolat ===== */
-.dashboard-section {
-  background: #fff;
-  border: 0.5px solid rgba(0,0,0,0.07);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 5px 18px rgba(15,23,42,.05);
-  margin-bottom: 20px;
-}
-.dashboard-section-head {
-  min-height: 64px;
-  padding: 0 26px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: linear-gradient(135deg, #13285F 0%, #1A2B5E 100%);
-  color: #fff;
-  font-size: 18px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: .4px;
-}
-.dashboard-section-head i { font-size: 24px; }
-.dashboard-section-body { padding: 22px; background: #fff; }
-.dashboard-section-body .loading { min-height: 130px; }
-.dashboard-section-body .error-box { margin-bottom: 0; }
+/* ---------- Heures & ETP ---------- */
+.hours-total { display: flex; align-items: baseline; gap: 8px; }
+.hours-total b { font-size: 40px; font-weight: 800; color: var(--navy); letter-spacing: -1.2px; line-height: 1; }
+.hours-total span { font-size: 18px; font-weight: 600; color: var(--muted); }
+.stack { display: flex; height: 16px; gap: 2px; margin: 16px 0 14px; border-radius: 5px; overflow: hidden; background: var(--track); }
+.stack > span { display: block; height: 100%; transition: width .5s; }
+.legend { display: flex; flex-direction: column; gap: 8px; }
+.legend-row { display: grid; grid-template-columns: 12px 1fr auto 48px; align-items: center; gap: 10px; font-size: 13px; }
+.legend-row .dot { width: 10px; height: 10px; border-radius: 3px; }
+.legend-row .lbl { color: var(--ink-2); }
+.legend-row .val { font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.legend-row .pct { text-align: right; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.legend-row.pending .val { color: var(--faint); font-weight: 500; }
+.etp-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 18px; }
+#panel-hours { display: flex; flex-direction: column; }
+#hours-content { flex: 1; display: flex; flex-direction: column; }
+#hours-content .etp-row { margin-top: auto; padding-top: 18px; }
+.km-table th.wk { width: 34%; }
+.etp { border-radius: 12px; padding: 12px 14px; background: #F7F9FC; border: 1px solid var(--line); }
+.etp.main { background: var(--navy-2); border-color: var(--navy-2); color: #fff; }
+.etp-v { font-size: 26px; font-weight: 700; letter-spacing: -.6px; color: var(--navy); line-height: 1.1; }
+.etp.main .etp-v { color: #fff; }
+.etp-l { font-size: 12px; font-weight: 600; color: var(--ink-2); margin-top: 2px; }
+.etp.main .etp-l { color: rgba(255,255,255,.9); }
+.etp-n { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.etp.main .etp-n { color: rgba(255,255,255,.65); }
+.foot-note { font-size: 11px; color: var(--faint); margin-top: 12px; }
 
-/* Le rectangle blanc de la section remplace les anciens panneaux imbriqués */
-.dashboard-section-inventory .shoe-inventory-panel {
-  border: 0;
-  border-radius: 0;
-  padding: 0;
-  box-shadow: none;
-}
-.dashboard-section-tig #tig-content > div {
-  border: 0 !important;
-  border-radius: 0 !important;
-  padding: 6px 10px 12px !important;
-}
+/* ---------- Comparaison N-1 (TIG, bénévoles) ---------- */
+.compare-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+.compare-big b { font-size: 40px; font-weight: 800; color: var(--navy); letter-spacing: -1.2px; line-height: 1; }
+.compare-big span { font-size: 16px; font-weight: 600; color: var(--muted); margin-left: 4px; }
+.compare-big .cap { display: block; font-size: 12px; color: var(--muted); margin-top: 6px; }
+.compare-delta { text-align: right; }
+.compare-delta .chip { font-size: 14px; padding: 4px 10px; }
+.compare-delta .cap { display: block; font-size: 11px; color: var(--muted); margin-top: 6px; }
+.cbars { display: flex; flex-direction: column; gap: 10px; }
+.cbar { display: grid; grid-template-columns: 96px 1fr 84px; align-items: center; gap: 12px; font-size: 13px; }
+.cbar-l { color: var(--ink-2); font-weight: 500; }
+.cbar-t { height: 22px; background: var(--track); border-radius: 6px; overflow: hidden; }
+.cbar-t > span { display: block; height: 100%; border-radius: 6px; }
+.cbar.ref .cbar-t > span { background: var(--ref); }
+.cbar.cur .cbar-t > span { background: var(--navy-2); }
+.cbar-v { text-align: right; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.cbar.ref .cbar-v { color: var(--muted); font-weight: 600; }
 
-@media (max-width: 520px) {
-  .dashboard-section-head { min-height: 56px; padding: 0 20px; font-size: 16px; }
-  .dashboard-section-head i { font-size: 22px; }
-  .dashboard-section-body { padding: 15px; }
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  .span-7, .span-5 { grid-column: span 12; }
 }
-
-
-
-/* ===== Livraisons ===== */
-.delivery-grid {
-  display: grid;
-  grid-template-columns: minmax(250px, .72fr) minmax(0, 1.7fr);
-  gap: 20px;
-  align-items: stretch;
+@media (max-width: 860px) {
+  .fleet-top { grid-template-columns: 1fr; }
+  .span-6 { grid-column: span 12; }
+  .km-table .hide-sm { display: none; }
 }
-.delivery-total-card {
-  min-height: 330px;
-  border: 1px solid #E2E8F0;
-  border-radius: 15px;
-  overflow: hidden;
-  background: #fff;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 4px 14px rgba(15,23,42,.04);
+@media (max-width: 640px) {
+  .dash { padding: 12px 16px 28px; }
+  .topbar { flex-wrap: wrap; padding: 16px; gap: 12px; border-radius: 16px; }
+  .logo { width: 52px; height: 52px; flex-basis: 52px; }
+  .brand-name { font-size: 19px; }
+  .top-actions { margin-left: 0; width: 100%; justify-content: space-between; }
+  .grid { gap: 12px; }
+  .panel { padding: 16px; }
+  .hbar { grid-template-columns: 92px 1fr 78px; gap: 8px; }
+  .km-week { grid-template-columns: 1fr; min-width: 0; gap: 4px; }
+  .km-week .meter { display: none; }
+  .km-table td, .km-table th { padding-left: 6px; padding-right: 6px; }
+  .compare-big b, .hours-total b { font-size: 32px; }
+  .cbar { grid-template-columns: 100px 1fr 64px; gap: 8px; }
+  .km-veh i { display: none; }
+  .brand-sub { font-size: 12px; }
 }
-.delivery-total-head {
-  min-height: 62px;
-  padding: 0 22px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #13285F;
-  background: #F8FAFC;
-  border-bottom: 1px solid #E2E8F0;
-  font-size: 14px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .45px;
-}
-.delivery-total-head i { font-size: 23px; color: #2A3E8F; }
-.delivery-total-body {
-  flex: 1;
-  padding: 34px 22px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.delivery-total-value {
-  color: #13285F;
-  font-size: clamp(58px, 7vw, 86px);
-  font-weight: 750;
-  line-height: 1;
-  letter-spacing: -2px;
-  text-align: center;
-}
-.delivery-total-accent { height: 6px; background: #F5C842; }
-.delivery-chart-card {
-  min-height: 330px;
-  border: 1px solid #E2E8F0;
-  border-radius: 15px;
-  padding: 22px 24px 18px;
-  background: #fff;
-  box-shadow: 0 4px 14px rgba(15,23,42,.04);
-}
-.delivery-chart-title {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  color: #13285F;
-  font-size: 15px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: .4px;
-  margin-bottom: 12px;
-}
-.delivery-chart-title i { font-size: 21px; color: #2A3E8F; }
-.delivery-chart-wrap { position: relative; height: 270px; }
-@media (max-width: 820px) {
-  .delivery-grid { grid-template-columns: 1fr; }
-  .delivery-total-card { min-height: 220px; }
-  .delivery-chart-wrap { height: 330px; }
-}
-@media (max-width: 520px) {
-  .delivery-total-head { min-height: 56px; padding: 0 18px; font-size: 13px; }
-  .delivery-total-body { padding: 28px 18px; }
-  .delivery-chart-card { padding: 18px 14px 14px; }
-  .delivery-chart-wrap { height: 360px; }
-}
-
-/* ===== Equivalent ETP ===== */
-.etp-section { margin-top: 20px; }
-.etp-summary {
-  display: grid;
-  grid-template-columns: 1.15fr 1fr 1fr;
-  gap: 18px;
-}
-.etp-total-card, .etp-card {
-  border: 1px solid #E2E8F0;
-  border-radius: 14px;
-  padding: 24px;
-  background: #F8FAFC;
-}
-.etp-total-card {
-  background: linear-gradient(135deg, #13285F 0%, #1A2B5E 100%);
-  color: #fff;
-}
-.etp-kicker { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px; opacity: .75; }
-.etp-total-value { font-size: clamp(38px, 5vw, 58px); font-weight: 700; line-height: 1; margin: 12px 0 8px; }
-.etp-total-detail { font-size: 13px; opacity: .76; }
-.etp-card-label { color: #64748B; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
-.etp-card-value { color: #13285F; font-size: clamp(36px, 4vw, 52px); font-weight: 700; line-height: 1; margin: 14px 0 8px; }
-.etp-card-note { color: #64748B; font-size: 12px; }
-.etp-breakdown { margin-top: 18px; padding-top: 16px; border-top: 1px solid #E2E8F0; color: #64748B; font-size: 12px; text-align: center; }
-@media (max-width: 820px) { .etp-summary { grid-template-columns: 1fr; } }
-
-
-/* ===== Evolution du nombre de bénévoles ===== */
-.volunteer-evolution-panel {
-  background: #fff;
-  border-radius: 16px;
-  border: 0.5px solid rgba(0,0,0,0.07);
-  padding: 28px 32px;
-}
-.volunteer-evolution-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 48px;
-  flex-wrap: wrap;
-}
-.volunteer-donut-block {
-  min-width: 210px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
-}
-.volunteer-donut {
-  position: relative;
-  width: 200px;
-  height: 200px;
-}
-.volunteer-donut canvas {
-  width: 200px !important;
-  height: 200px !important;
-}
-.volunteer-donut-center {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  text-align: center;
-}
-.volunteer-donut-value {
-  font-size: clamp(42px, 5vw, 58px);
-  font-weight: 700;
-  line-height: 1;
-}
-.volunteer-donut-value.navy { color: #1A2B5E; }
-.volunteer-donut-value.gold { color: #D4A017; }
-.volunteer-donut-sub {
-  font-size: 18px;
-  font-weight: 600;
-  color: #1A2B5E;
-  line-height: 1.1;
-}
-.volunteer-donut-label {
-  font-size: 22px;
-  font-weight: 700;
-  color: #1A2B5E;
-  text-align: center;
-}
-.volunteer-evolution-middle {
-  min-width: 180px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-.volunteer-evolution-middle .meta {
-  font-size: 14px;
-  color: #94A3B8;
-  text-transform: lowercase;
-}
-.volunteer-evolution-middle .pct {
-  font-size: clamp(40px, 5vw, 56px);
-  font-weight: 800;
-  line-height: 1;
-}
-.volunteer-evolution-middle .pct.positive { color: #22C55E; }
-.volunteer-evolution-middle .pct.negative { color: #EF4444; }
-.volunteer-evolution-middle .pct.neutral { color: #F5C842; }
-.volunteer-evolution-middle .arrow {
-  font-size: 24px;
-  line-height: 1;
-}
-.volunteer-evolution-middle .arrow.positive { color: #22C55E; }
-.volunteer-evolution-middle .arrow.negative { color: #EF4444; }
-.volunteer-evolution-middle .arrow.neutral { color: #F5C842; }
-@media (max-width: 820px) {
-  .volunteer-evolution-panel { padding: 22px 16px; }
-  .volunteer-evolution-wrap { gap: 24px; }
-  .volunteer-donut { width: 170px; height: 170px; }
-  .volunteer-donut canvas { width: 170px !important; height: 170px !important; }
-  .volunteer-donut-label { font-size: 18px; }
-}
-
-
-/* ===== Verrouillage affichage Evolution bénévoles ===== */
-#benevoles-evolution-section {
-  margin-top: 0 !important;
-  margin-bottom: 20px !important;
-}
-
-#benevoles-evolution-section .dashboard-section-body {
-  padding: 22px !important;
-  background: #fff !important;
-}
-
-#benevoles-evolution-content > div {
-  border: 0 !important;
-  border-radius: 0 !important;
-  padding: 6px 10px 12px !important;
-  box-shadow: none !important;
-}
-
-#benevoles-evolution-content canvas {
-  width: 160px !important;
-  height: 160px !important;
-  max-width: 160px !important;
-  max-height: 160px !important;
-}
-
-#benevoles-evolution-content [style*="width:160px"] {
-  width: 160px !important;
-  height: 160px !important;
-  flex: 0 0 160px !important;
-}
-
-#benevoles-evolution-content > div > div {
-  min-height: 0 !important;
-}
-
-@media (max-width: 700px) {
-  #benevoles-evolution-content canvas {
-    width: 145px !important;
-    height: 145px !important;
-  }
-
-  #benevoles-evolution-content [style*="width:160px"] {
-    width: 145px !important;
-    height: 145px !important;
-    flex-basis: 145px !important;
-  }
-}
-
 </style>
 </head>
 <body>
@@ -558,7 +238,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 #login-overlay {
   position: fixed; inset: 0; background: #F0F2F8;
   display: flex; align-items: center; justify-content: center;
-  z-index: 9999; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  z-index: 9999; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 .login-card {
   background: #fff; border-radius: 16px; border: 0.5px solid rgba(0,0,0,0.08);
@@ -674,127 +354,74 @@ window.addEventListener('pageshow', lockDashboard);
 </script>
 
 <div class="dash">
-  <div class="dash-top">
-    <div class="dash-brand">
-      <div class="dash-logo-circle"><img src="data:image/jpeg;base64,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" alt="Logo Emmaüs Grand Sud"></div>
-      <div>
-        <div class="dash-brand-name">Emmaüs Grand Sud</div><div class="dash-brand-sub">Saint-Pierre, Réunion</div>
-      </div>
-      <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
-        <span class="dash-ts"><i class="ti ti-clock" style="font-size:12px;"></i> <span id="last-update">Chargement...</span></span>
-        <button class="refresh-btn" onclick="loadAll()"><i class="ti ti-refresh" style="font-size:12px;"></i> Actualiser</button>
-      </div>
+  <header class="topbar">
+    <div class="logo"><img src="data:image/jpeg;base64,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" alt="Logo Emmaüs Grand Sud"></div>
+    <div class="brand">
+      <div class="brand-name">Emmaüs Grand Sud</div>
+      <div class="brand-sub">Saint-Pierre, Réunion · Tableau de bord d'activité</div>
     </div>
-  </div>
-
-  <div class="dash-body">
-    <section class="dashboard-section dashboard-section-fleet">
-      <div class="dashboard-section-head"><i class="ti ti-truck-delivery"></i> Suivi de flotte</div>
-      <div class="dashboard-section-body">
-        <div id="flotte-loading" class="loading"><div class="spinner"></div> Chargement des données...</div>
-        <div id="flotte-error" class="error-box" style="display:none;"></div>
-        <div id="flotte-content" style="display:none;"></div>
-      </div>
-    </section>
-
-
-    <section class="dashboard-section dashboard-section-deliveries">
-      <div class="dashboard-section-head"><i class="ti ti-package-export"></i> Suivi des livraisons</div>
-      <div class="dashboard-section-body">
-        <div id="deliveries-loading" class="loading"><div class="spinner"></div> Chargement des livraisons...</div>
-        <div id="deliveries-error" class="error-box" style="display:none;"></div>
-        <div id="deliveries-content" class="delivery-grid" style="display:none;">
-          <div class="delivery-total-card">
-            <div class="delivery-total-head"><i class="ti ti-truck-delivery"></i> Livraisons effectuées</div>
-            <div class="delivery-total-body">
-              <div id="deliveries-total" class="delivery-total-value">—</div>
-            </div>
-            <div class="delivery-total-accent"></div>
-          </div>
-          <div class="delivery-chart-card">
-            <div class="delivery-chart-title"><i class="ti ti-map-pin"></i> Livraisons par ville</div>
-            <div class="delivery-chart-wrap"><canvas id="deliveries-city-chart"></canvas></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="dashboard-section dashboard-section-inventory">
-      <div class="dashboard-section-head"><i class="ti ti-shoe"></i> Inventaire chaussures</div>
-      <div class="dashboard-section-body">
-        <div id="inv-loading" class="loading"><div class="spinner"></div> Chargement de l'inventaire...</div>
-        <div id="inv-error" class="error-box" style="display:none;"></div>
-        <div id="inv-content" style="display:none;"></div>
-      </div>
-    </section>
-
-    <section class="dashboard-section dashboard-section-tig">
-      <div class="dashboard-section-head"><i class="ti ti-chart-line"></i> Suivi TIG</div>
-      <div class="dashboard-section-body">
-        <div id="tig-loading" class="loading"><div class="spinner"></div> Chargement des données TIG...</div>
-        <div id="tig-error" class="error-box" style="display:none;"></div>
-        <div id="tig-content" style="display:none;"></div>
-      </div>
-    </section>
-
-    <section class="dashboard-section" id="benevoles-evolution-section">
-      <div class="dashboard-section-head"><i class="ti ti-user-plus"></i> Évolution des bénévoles</div>
-      <div class="dashboard-section-body">
-        <div id="benevoles-evolution-loading" class="loading"><div class="spinner"></div> Calcul des effectifs bénévoles...</div>
-        <div id="benevoles-evolution-error" class="error-box" style="display:none;"></div>
-        <div id="benevoles-evolution-content" style="display:none;"></div>
-      </div>
-    </section>
-
-    <div class="hours-grid">
-      <section class="hours-card hours-stage">
-        <div class="hours-card-head"><i class="ti ti-school"></i> Stage</div>
-        <div class="hours-card-body">
-          <div class="hours-icon"><i class="ti ti-school"></i></div>
-          <div id="stage-value" class="hours-value">—</div>
-        </div>
-        <div class="hours-accent"></div>
-        <div id="stage-loading" class="hours-status">Chargement…</div>
-        <div id="stage-error" class="error-box" style="display:none;margin:12px;"></div>
-        <div id="stage-content" style="display:none;"></div>
-      </section>
-
-      <section class="hours-card hours-volunteer">
-        <div class="hours-card-head"><i class="ti ti-heart-handshake"></i> Bénévolat</div>
-        <div class="hours-card-body">
-          <div class="hours-icon"><i class="ti ti-heart-handshake"></i></div>
-          <div id="benevolat-value" class="hours-value">—</div>
-        </div>
-        <div class="hours-accent"></div>
-        <div id="benevolat-loading" class="hours-status">Chargement…</div>
-        <div id="benevolat-error" class="error-box" style="display:none;margin:12px;"></div>
-        <div id="benevolat-content" style="display:none;"></div>
-      </section>
+    <div class="top-actions">
+      <span class="stamp"><i class="ti ti-clock"></i> <span id="last-update">Chargement…</span></span>
+      <button class="refresh-btn" onclick="loadAll()"><i class="ti ti-refresh"></i> Actualiser</button>
     </div>
+  </header>
 
-    <section class="dashboard-section etp-section">
-      <div class="dashboard-section-head"><i class="ti ti-users-group"></i> Equivalent ETP</div>
-      <div class="dashboard-section-body">
-        <div class="etp-summary">
-          <div class="etp-total-card">
-            <div class="etp-kicker">Total des heures mobilisées</div>
-            <div id="etp-total-hours" class="etp-total-value">—</div>
-            <div class="etp-total-detail">Suivi TIG + Stage + Bénévolat</div>
-          </div>
-          <div class="etp-card">
-            <div class="etp-card-label">ETP 35 h / semaine</div>
-            <div id="etp-35" class="etp-card-value">—</div>
-            <div class="etp-card-note">Base annuelle : 1 820 heures</div>
-          </div>
-          <div class="etp-card">
-            <div class="etp-card-label">ETP 25 h / semaine</div>
-            <div id="etp-25" class="etp-card-value">—</div>
-            <div class="etp-card-note">Base annuelle : 1 300 heures</div>
-          </div>
-        </div>
-        <div id="etp-breakdown" class="etp-breakdown">Calcul en cours…</div>
+  <div class="grid">
+    <!-- Flotte -->
+    <section class="panel span-12" id="panel-fleet">
+      <div class="panel-head">
+        <div class="panel-ic"><i class="ti ti-truck-delivery"></i></div>
+        <div><div class="panel-title">Suivi de flotte</div><div class="panel-sub" id="fleet-sub">États des lieux (EDL) départ / retour</div></div>
       </div>
+      <div id="flotte-loading" class="loading"><div class="spinner"></div> Chargement des données…</div>
+      <div id="flotte-error" class="error-box" style="display:none;"></div>
+      <div id="flotte-content" style="display:none;"></div>
     </section>
+
+    <!-- Livraisons -->
+    <section class="panel span-7" id="panel-deliveries">
+      <div class="panel-head">
+        <div class="panel-ic"><i class="ti ti-map-pin"></i></div>
+        <div><div class="panel-title">Livraisons par ville</div><div class="panel-sub" id="deliveries-sub">Répartition des livraisons effectuées</div></div>
+        <div class="panel-meta" id="deliveries-meta"></div>
+      </div>
+      <div id="deliveries-loading" class="loading"><div class="spinner"></div> Chargement des livraisons…</div>
+      <div id="deliveries-error" class="error-box" style="display:none;"></div>
+      <div id="deliveries-content" style="display:none;"></div>
+    </section>
+
+    <!-- Heures & ETP -->
+    <section class="panel span-5" id="panel-hours">
+      <div class="panel-head">
+        <div class="panel-ic"><i class="ti ti-users-group"></i></div>
+        <div><div class="panel-title">Heures mobilisées &amp; équivalent ETP</div><div class="panel-sub">TIG + Stage + Bénévolat</div></div>
+      </div>
+      <div id="hours-content"><div class="loading"><div class="spinner"></div> Calcul en cours…</div></div>
+      <div id="hours-errors"></div>
+    </section>
+
+    <!-- TIG -->
+    <section class="panel span-6" id="panel-tig">
+      <div class="panel-head">
+        <div class="panel-ic"><i class="ti ti-chart-line"></i></div>
+        <div><div class="panel-title">Suivi TIG</div><div class="panel-sub">Heures de travail d'intérêt général, comparaison annuelle</div></div>
+      </div>
+      <div id="tig-loading" class="loading"><div class="spinner"></div> Chargement des données TIG…</div>
+      <div id="tig-error" class="error-box" style="display:none;"></div>
+      <div id="tig-content" style="display:none;"></div>
+    </section>
+
+    <!-- Bénévoles -->
+    <section class="panel span-6" id="benevoles-evolution-section">
+      <div class="panel-head">
+        <div class="panel-ic"><i class="ti ti-user-plus"></i></div>
+        <div><div class="panel-title">Évolution des bénévoles</div><div class="panel-sub">Effectif inscrit, depuis le 1<sup>er</sup> janvier</div></div>
+      </div>
+      <div id="benevoles-evolution-loading" class="loading"><div class="spinner"></div> Calcul des effectifs bénévoles…</div>
+      <div id="benevoles-evolution-error" class="error-box" style="display:none;"></div>
+      <div id="benevoles-evolution-content" style="display:none;"></div>
+    </section>
+
   </div>
 </div>
 
@@ -808,11 +435,24 @@ const SHEET_LIVRAISONS = '1DXyAqGfjOorKS8OQkJ31nuxldo2XgKJR91nzrkWwFZU';
 const BENEVOLAT_SHEET_GID = 1165750423;
 const BENEVOLAT_EFFECTIF_SHEET_GID = 939568640;
 const STAGE_SHEET_GID = 1130901138;
-const NAVY = ['#1A2B5E','#2A3E8F','#4C6BC4','#7B9FE0','#B8CFF5','#D6E5FA'];
-const VEH_COLORS = ['#F5C842','#2A3E8F','#7B9FE0','#CBD5E1','#4C6BC4','#B8CFF5'];
-let charts = {};
 
+const COLORS = { tig: '#1A2B5E', stage: '#F5C842', benevolat: '#5B7BD6' };
 const etpHours = { tig: null, stage: null, benevolat: null };
+const hoursErrors = {};
+
+/* ---------- Utilitaires d'affichage ---------- */
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmt = (v, d = 0) => Number(v || 0).toLocaleString('fr-FR', { maximumFractionDigits: d });
+const fmt2 = v => Number(v || 0).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const pctOf = (part, total) => total > 0 ? Math.round(part / total * 100) : 0;
+function deltaChip(pct, digits = 0) {
+  if (!Number.isFinite(pct)) return '<span class="chip flat">n.d.</span>';
+  const r = Math.round(pct * Math.pow(10, digits)) / Math.pow(10, digits);
+  const txt = (r > 0 ? '+' : '') + r.toLocaleString('fr-FR', { maximumFractionDigits: digits }) + ' %';
+  if (r > 0) return '<span class="chip up"><i class="ti ti-arrow-up-right"></i>' + txt + '</span>';
+  if (r < 0) return '<span class="chip down"><i class="ti ti-arrow-down-right"></i>' + txt + '</span>';
+  return '<span class="chip flat">=</span>';
+}
 
 function parseHourValue(value) {
   if (typeof value === 'number') return Number.isFinite(value) ? value : 0;
@@ -823,31 +463,50 @@ function parseHourValue(value) {
   return Number.parseFloat(cleaned) || 0;
 }
 
+/* ---------- Heures mobilisées & ETP ---------- */
 function updateEquivalentETP() {
-  const values = Object.values(etpHours);
-  const loaded = values.filter(value => Number.isFinite(value));
-  const total = loaded.reduce((sum, value) => sum + value, 0);
-  const formatHours = value => value.toLocaleString('fr-FR', { maximumFractionDigits: 2 }) + ' h';
-  const formatEtp = value => value.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const parts = [
+    { key: 'tig', label: 'Suivi TIG' },
+    { key: 'stage', label: 'Stage' },
+    { key: 'benevolat', label: 'Bénévolat' }
+  ];
+  const loaded = parts.filter(p => Number.isFinite(etpHours[p.key]));
+  const total = loaded.reduce((s, p) => s + etpHours[p.key], 0);
+  const missing = parts.filter(p => !Number.isFinite(etpHours[p.key]));
+  const etp35 = total / (35 * 52);
+  const etp25 = total / (25 * 52);
 
-  document.getElementById('etp-total-hours').textContent = loaded.length ? formatHours(total) : '—';
-  document.getElementById('etp-35').textContent = loaded.length ? formatEtp(total / (35 * 52)) : '—';
-  document.getElementById('etp-25').textContent = loaded.length ? formatEtp(total / (25 * 52)) : '—';
+  if (!loaded.length) return;
 
-  const missing = [];
-  if (!Number.isFinite(etpHours.tig)) missing.push('TIG');
-  if (!Number.isFinite(etpHours.stage)) missing.push('Stage');
-  if (!Number.isFinite(etpHours.benevolat)) missing.push('Bénévolat');
+  const segs = parts.map(p => Number.isFinite(etpHours[p.key])
+    ? '<span style="width:' + (etpHours[p.key] / total * 100) + '%;background:' + COLORS[p.key] + '" title="' + p.label + ' : ' + fmt(etpHours[p.key], 2) + ' h"></span>' : '').join('');
 
-  const details = [
-    'TIG : ' + (Number.isFinite(etpHours.tig) ? formatHours(etpHours.tig) : 'en attente'),
-    'Stage : ' + (Number.isFinite(etpHours.stage) ? formatHours(etpHours.stage) : 'en attente'),
-    'Bénévolat : ' + (Number.isFinite(etpHours.benevolat) ? formatHours(etpHours.benevolat) : 'en attente')
-  ].join(' • ');
-  document.getElementById('etp-breakdown').textContent = details + (missing.length ? ' — calcul provisoire' : '');
+  const legend = parts.map(p => {
+    const ok = Number.isFinite(etpHours[p.key]);
+    return '<div class="legend-row' + (ok ? '' : ' pending') + '">' +
+      '<span class="dot" style="background:' + COLORS[p.key] + '"></span>' +
+      '<span class="lbl">' + p.label + '</span>' +
+      '<span class="val">' + (ok ? fmt(etpHours[p.key], 2) + ' h' : (hoursErrors[p.key] ? 'erreur' : 'en attente')) + '</span>' +
+      '<span class="pct">' + (ok ? pctOf(etpHours[p.key], total) + ' %' : '') + '</span>' +
+    '</div>';
+  }).join('');
+
+  document.getElementById('hours-content').innerHTML =
+    '<div class="hours-total num"><b>' + fmt(total, 2) + '</b><span>heures</span></div>' +
+    '<div class="stack" role="img" aria-label="Répartition des heures par source">' + segs + '</div>' +
+    '<div class="legend">' + legend + '</div>' +
+    '<div class="etp-row">' +
+      '<div class="etp main"><div class="etp-v num">' + fmt2(etp35) + '</div><div class="etp-l">ETP à 35 h / semaine</div><div class="etp-n">Base annuelle : 1 820 h</div></div>' +
+      '<div class="etp"><div class="etp-v num">' + fmt2(etp25) + '</div><div class="etp-l">ETP à 25 h / semaine</div><div class="etp-n">Base annuelle : 1 300 h</div></div>' +
+    '</div>' +
+    (missing.length ? '<div class="foot-note">Calcul provisoire : ' + missing.map(p => p.label).join(', ') + ' non chargé(s).</div>' : '');
+
+  document.getElementById('hours-errors').innerHTML = Object.values(hoursErrors)
+    .map(m => '<div class="error-box" style="margin-top:12px">' + esc(m) + '</div>').join('');
+
 }
 
-
+/* ---------- Accès Google Sheets ---------- */
 async function fetchSheet(id, range) {
   const url = 'https://sheets.googleapis.com/v4/spreadsheets/' +
     encodeURIComponent(id) + '/values/' + encodeURIComponent(range) +
@@ -882,16 +541,13 @@ async function fetchSheetRaw(id, range) {
   return data.values || [];
 }
 
-function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
-function makeChart(id, config) { destroyChart(id); const ctx = document.getElementById(id); if (ctx) charts[id] = new Chart(ctx, config); }
-
 function buildVehicleResolver(rows, vehicleColumn) {
   const labels = new Map();
   const vehicleKey = value => {
     const label = String(value || '').trim();
     const plate = label.match(/\[([^\]]+)\]/);
     if (plate) return 'plate:' + plate[1].toUpperCase().replace(/[^A-Z0-9]/g, '');
-    return 'name:' + label.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    return 'name:' + label.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]/g, '');
   };
   rows.forEach(row => {
     const label = String(row[vehicleColumn] || '').trim();
@@ -901,6 +557,7 @@ function buildVehicleResolver(rows, vehicleColumn) {
   return value => labels.get(vehicleKey(value)) || String(value || '').trim();
 }
 
+/* ---------- Suivi de flotte ---------- */
 async function loadFlotte() {
   document.getElementById('flotte-loading').style.display = 'flex';
   document.getElementById('flotte-content').style.display = 'none';
@@ -962,32 +619,12 @@ async function loadFlotte() {
     const totalSorties = Object.values(chauffeurs).reduce((a,b) => a+b, 0);
     const chauffeurLabels = Object.keys(chauffeurs);
     const vehiculeLabels = Object.keys(vehicules);
+    const splitVeh = v => { const m = String(v).match(/^(.+?)\s*\[(.+?)\]/); return m ? { name: m[1].trim(), plate: m[2].trim() } : { name: v, plate: '' }; };
 
     const topVehicule = vehiculeLabels.reduce((a,b) => vehicules[a] >= vehicules[b] ? a : b, vehiculeLabels[0] || '');
     const topVehiculeCount = vehicules[topVehicule] || 0;
-    const topVehiculeMatch = topVehicule.match(/^(.+?)\s*\[(.+?)\]/);
-    const topVName = topVehiculeMatch ? topVehiculeMatch[1].trim() : topVehicule;
-    const topVPlate = topVehiculeMatch ? topVehiculeMatch[2].trim() : '';
-    const topVPct = totalSorties > 0 ? Math.round(topVehiculeCount / totalSorties * 100) : 0;
-
-    const top3 = [...chauffeurLabels].sort((a,b) => chauffeurs[b]-chauffeurs[a]).slice(0,3);
-    const podiumSlots = [
-      { rank: 1, medal: '🥈', height: '44px', color: '#CBD5E1', width: '40px', fs: '15px', fw: '500', fsize: '10px' },
-      { rank: 0, medal: '🥇', height: '72px', color: '#F5C842', width: '52px', fs: '20px', fw: '600', fsize: '12px' },
-      { rank: 2, medal: '🥉', height: '30px', color: '#D4A27A', width: '40px', fs: '13px', fw: '500', fsize: '10px' }
-    ];
-    const podiumHTML = '<div class="podium-wrap">' +
-      podiumSlots.map(s => {
-        if (!top3[s.rank]) return '';
-        const n = top3[s.rank].split(' ')[0];
-        return '<div class="podium-col" style="justify-content:flex-end;">' +
-          '<div style="font-size:' + s.fs + ';margin-bottom:2px;">' + s.medal + '</div>' +
-          '<div class="podium-name" style="font-size:' + s.fsize + ';font-weight:' + s.fw + ';">' + n + '</div>' +
-          '<div class="podium-count" style="margin-bottom:4px;">' + chauffeurs[top3[s.rank]] + ' EDL</div>' +
-          '<div class="podium-bar" style="height:' + s.height + ';background:' + s.color + ';width:' + s.width + ';flex-shrink:0;"></div>' +
-        '</div>';
-      }).join('') +
-    '</div>';
+    const topV = splitVeh(topVehicule);
+    const topVPct = pctOf(topVehiculeCount, totalSorties);
 
     const now = new Date();
     const dow = now.getDay() === 0 ? 6 : now.getDay() - 1;
@@ -998,10 +635,7 @@ async function loadFlotte() {
     const parseFrenchDate = value => {
       const parts = String(value || '').split(' ')[0].split('/');
       if (parts.length !== 3) return null;
-      const day = Number(parts[0]);
-      const month = Number(parts[1]) - 1;
-      const year = Number(parts[2]);
-      const parsed = new Date(year, month, day);
+      const parsed = new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
       return Number.isNaN(parsed.getTime()) ? null : parsed;
     };
 
@@ -1009,7 +643,6 @@ async function loadFlotte() {
       .map(incident => ({ ...incident, parsedDate: parseFrenchDate(incident.date) }))
       .filter(incident => incident.parsedDate && incident.parsedDate >= monday && incident.parsedDate <= now)
       .sort((a, b) => b.parsedDate - a.parsedDate || b.rowIndex - a.rowIndex);
-
     const dernierIncidentSemaine = incidentsSemaine[0] || null;
     const allDates = [...new Set(data.map(r => toFrDate(r[iDate])).filter(Boolean))].sort();
 
@@ -1028,146 +661,78 @@ async function loadFlotte() {
       });
     });
 
-    const chauffeurPieColors = NAVY.slice(0, chauffeurLabels.length);
-    const vehiculePieColors = VEH_COLORS.slice(0, vehiculeLabels.length);
+    /* -- Rendu -- */
+    const top = [...chauffeurLabels].sort((a,b) => chauffeurs[b]-chauffeurs[a]).slice(0,5);
+    const topMax = top.length ? chauffeurs[top[0]] : 1;
+    const rankHTML = '<div class="rank">' + top.map((c, i) =>
+      '<div class="rank-row" title="' + esc(c) + ' : ' + chauffeurs[c] + ' EDL">' +
+        '<span class="rank-pos">' + (i + 1) + '</span>' +
+        '<span class="rank-name">' + esc(c.split(' ')[0]) + '</span>' +
+        '<span class="rank-bar"><span style="width:' + (chauffeurs[c] / topMax * 100) + '%"></span></span>' +
+        '<span class="rank-val num"><b>' + chauffeurs[c] + '</b> EDL</span>' +
+      '</div>').join('') + '</div>';
 
-    const legChauffeur = chauffeurLabels.map((l,i) => {
-      const pct = Math.round(chauffeurs[l]/totalSorties*100);
-      return '<div class="pie-leg-item"><span class="pie-dot" style="background:' + chauffeurPieColors[i] + ';"></span><span class="pie-leg-name">' + l + '</span><div class="pie-leg-bar-wrap"><div class="pie-leg-bar" style="width:' + (pct*100/29) + '%;background:' + chauffeurPieColors[i] + ';"></div></div><span class="pie-leg-pct">' + pct + '%</span></div>';
-    }).join('');
-
-    const legVehicule = vehiculeLabels.map((l,i) => {
-      const pct = Math.round(vehicules[l]/totalSorties*100);
-      const nm = l.replace(/\s*\[.*?\]/, '');
-      return '<div class="pie-leg-item"><span class="pie-dot" style="background:' + vehiculePieColors[i] + ';"></span><span class="pie-leg-name">' + nm + '</span><div class="pie-leg-bar-wrap"><div class="pie-leg-bar" style="width:' + pct + '%;background:' + vehiculePieColors[i] + ';"></div></div><span class="pie-leg-pct">' + pct + '%</span></div>';
-    }).join('');
-
-    const truckCardsHTML = vehiculeLabels.map(v => {
-      const kmS = Math.round(kmSemaine[v] || 0);
-      const kmSD = Math.round(kmSemaineDerniere[v] || 0);
-      const kmM = Math.round(kmMois[v] || 0);
-      const m = v.match(/^(.+?)\s*\[(.+?)\]/);
-      const vn = m ? m[1].trim() : v;
-      const vp = m ? m[2].trim() : '';
-      const inactive = kmS === 0 && kmSD === 0 && kmM === 0;
-      return '<div class="truck-card">' +
-        '<div class="truck-ic" style="' + (inactive ? 'background:#F8FAFC;' : '') + '"><i class="ti ti-truck" style="' + (inactive ? 'color:#CBD5E1;' : '') + '"></i></div>' +
-        '<div class="truck-vname" style="' + (inactive ? 'color:#94A3B8;' : '') + '">' + vn + '</div>' +
-        (vp ? '<div class="truck-plate">' + vp + '</div>' : '') +
-        '<div style="width:100%;margin-top:8px;">' +
-          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">' +
-            '<span style="font-size:9px;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;">Cette semaine</span>' +
-            '<span style="font-size:16px;font-weight:500;color:' + (kmS === 0 ? '#CBD5E1' : '#1A2B5E') + ';">' + kmS + ' km</span>' +
-          '</div>' +
-          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;padding-top:5px;border-top:0.5px solid #F0F2F8;">' +
-            '<span style="font-size:9px;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;">Sem. dernière</span>' +
-            '<span style="font-size:13px;font-weight:400;color:' + (kmSD === 0 ? '#CBD5E1' : '#64748B') + ';">' + kmSD + ' km</span>' +
-          '</div>' +
-          '<div style="display:flex;justify-content:space-between;align-items:center;padding-top:5px;border-top:0.5px solid #F0F2F8;">' +
-            '<span style="font-size:9px;color:#94A3B8;text-transform:uppercase;letter-spacing:0.5px;">Ce mois</span>' +
-            '<span style="font-size:13px;font-weight:400;color:' + (kmM === 0 ? '#CBD5E1' : '#64748B') + ';">' + kmM + ' km</span>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-    }).join('');
-
-    // *** FIX PHOTOS MULTIPLES ***
-    const buildPhotoLinks = (photoStr, style, prefix) => {
+    const buildPhotoLinks = photoStr => {
       if (!photoStr) return '';
-      return photoStr.split(',').map((p, i) => {
-        const url = p.trim();
-        if (!url) return '';
-        return '<a href="' + url + '" target="_blank" style="' + style + '"><i class="ti ti-camera" style="font-size:12px;"></i> ' + prefix + (photoStr.split(',').length > 1 ? ' ' + (i+1) : '') + '</a>';
-      }).join(' ');
+      const list = String(photoStr).split(',').map(s => s.trim()).filter(Boolean);
+      return list.map((url, i) => '<a class="inc-tag link" href="' + esc(url) + '" target="_blank" rel="noopener"><i class="ti ti-camera"></i> Photo' + (list.length > 1 ? ' ' + (i + 1) : '') + '</a>').join('');
     };
 
-    const incidentsHTML = dernierIncidentSemaine
-      ? (() => {
-          const inc = dernierIncidentSemaine;
-          const badges = inc.types.map(t => '<span class="inc-badge">' + t + '</span>').join(' ');
-          const photo = buildPhotoLinks(inc.photo, '', 'Photo');
-          const vShort = inc.vehicule.replace(/\s*\[.*?\]/, '');
-          const vPlate = (inc.vehicule.match(/\[(.+?)\]/) || [])[1] || '';
-          return '<div class="inc-row">' +
-            '<div style="width:3px;height:36px;background:#F59E0B;border-radius:2px;flex-shrink:0;"></div>' +
-            '<div style="flex:1;">' +
-              '<div class="inc-meta">' + inc.date + ' · ' + inc.chauffeur + ' · ' + vShort + (vPlate ? ' [' + vPlate + ']' : '') + '</div>' +
-              '<div class="inc-desc">' + inc.desc + '</div>' +
-            '</div>' +
-            badges + photo +
-          '</div>';
-        })()
-      : '<div class="inc-row" style="color:#64748B;font-size:12px;">Aucun incident signalé cette semaine</div>';
+    let statusHTML;
+    if (dernierIncidentSemaine) {
+      const inc = dernierIncidentSemaine;
+      const v = splitVeh(inc.vehicule);
+      const n = incidentsSemaine.length;
+      statusHTML = '<div class="tile status ko">' +
+        '<div class="status-line"><span class="status-ic"><i class="ti ti-alert-triangle"></i></span>' +
+        '<div><div class="status-title num">' + n + ' incident' + (n > 1 ? 's' : '') + '</div><div class="status-sub">signalé' + (n > 1 ? 's' : '') + ' cette semaine</div></div></div>' +
+        '<div class="inc-box"><div class="meta">' + esc(inc.date) + ' · ' + esc(inc.chauffeur) + ' · ' + esc(v.name) + (v.plate ? ' [' + esc(v.plate) + ']' : '') + '</div>' +
+        '<div>' + esc(inc.desc) + '</div>' +
+        '<div class="inc-tags">' + inc.types.map(t => '<span class="inc-tag">' + esc(t) + '</span>').join('') + buildPhotoLinks(inc.photo) + '</div></div>' +
+      '</div>';
+    } else {
+      statusHTML = '<div class="tile status ok"><div class="status-line"><span class="status-ic"><i class="ti ti-circle-check"></i></span>' +
+        '<div><div class="status-title">Aucun incident</div><div class="status-sub">signalé cette semaine</div></div></div></div>';
+    }
 
+    const sorted = [...vehiculeLabels].sort((a, b) => (kmSemaine[b] - kmSemaine[a]) || (kmMois[b] - kmMois[a]));
+    const maxWeek = Math.max(1, ...sorted.map(v => kmSemaine[v]));
+    let tW = 0, tL = 0, tM = 0;
+    const rowsHTML = sorted.map(v => {
+      const kS = Math.round(kmSemaine[v] || 0), kL = Math.round(kmSemaineDerniere[v] || 0), kM = Math.round(kmMois[v] || 0);
+      tW += kS; tL += kL; tM += kM;
+      const idle = kS === 0 && kL === 0 && kM === 0;
+      const vv = splitVeh(v);
+      return '<tr class="' + (idle ? 'idle' : '') + '">' +
+        '<td><div class="km-veh"><i class="ti ti-truck"></i><div><b>' + esc(vv.name) + '</b>' + (vv.plate ? '<span class="plate">' + esc(vv.plate) + '</span>' : '') + '</div></div></td>' +
+        '<td><div class="km-week"><div class="meter"><span style="width:' + (kS / maxWeek * 100) + '%"></span></div><b class="num">' + fmt(kS) + ' km</b></div></td>' +
+        '<td class="r num">' + fmt(kL) + ' km</td>' +
+        '<td class="r num hide-sm">' + fmt(kM) + ' km</td>' +
+        '<td class="r num hide-sm">' + (vehicules[v] || 0) + '</td>' +
+      '</tr>';
+    }).join('');
+
+    const mondayLbl = monday.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+    const monthLbl = now.toLocaleDateString('fr-FR', { month: 'long' });
 
     document.getElementById('flotte-content').innerHTML =
-      '<div class="section-label">Vue d\'ensemble</div>' +
-      '<div class="hero-row">' +
-        '<div class="hero-card" style="overflow:hidden;display:flex;flex-direction:column;"><div class="hero-card-inner" style="flex:1;">' +
-          '<div class="hero-card-label"><i class="ti ti-steering-wheel" style="font-size:13px;color:#2A3E8F;"></i> Véhicule le plus utilisé</div>' +
-          '<div style="display:flex;align-items:center;gap:14px;margin-top:10px;">' +
-            '<div style="width:52px;height:52px;border-radius:12px;background:#EEF2FF;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
-              '<i class="ti ti-truck" style="font-size:26px;color:#1A2B5E;"></i>' +
-            '</div>' +
-            '<div style="flex:1;">' +
-              '<div style="font-size:18px;font-weight:500;color:#0F172A;line-height:1.2;">' + topVName + '</div>' +
-              '<div style="margin-top:5px;"><span class="plate-badge">' + topVPlate + '</span></div>' +
-            '</div>' +
-          '</div>' +
-          '<div style="margin-top:12px;background:#EEF0F6;border-radius:6px;overflow:hidden;height:6px;">' +
-            '<div style="width:' + topVPct + '%;height:6px;background:#1A2B5E;border-radius:6px;"></div>' +
-          '</div>' +
-          '<div style="text-align:center;margin-top:5px;font-size:13px;font-weight:500;color:#1A2B5E;">' + topVPct + '% des EDL</div>' +
-        '</div></div>' +
-
-        '<div class="hero-card"><div class="hero-card-inner">' +
-          '<div class="hero-card-label"><i class="ti ti-trophy" style="font-size:13px;color:#B45309;"></i> Top chauffeurs</div>' +
-          podiumHTML +
-        '</div><div class="hero-card-bar"><div class="hero-card-bar-fill" style="width:100%;background:#F5C842;"></div></div></div>' +
-
-        (incidentsSemaine.length > 0 ?
-          '<div class="hero-card" style="background:#FFF8F8;border:0.5px solid #FBBFBF;display:flex;flex-direction:column;"><div class="hero-card-inner" style="flex:1;display:flex;flex-direction:column;">' +
-            '<div class="hero-card-label" style="color:#A32D2D;"><i class="ti ti-alert-triangle" style="font-size:13px;"></i> Incidents signalés</div>' +
-            '<div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;margin-top:4px;">' +
-              '<div style="width:52px;height:52px;border-radius:12px;background:#FCEBEB;display:flex;align-items:center;justify-content:center;flex-shrink:0;">' +
-                '<i class="ti ti-alert-triangle" style="font-size:26px;color:#E24B4A;"></i>' +
-              '</div>' +
-              '<div style="flex:1;">' +
-                '<div style="font-size:32px;font-weight:500;color:#E24B4A;line-height:1;">' + incidentsSemaine.length + '</div>' +
-                '<div style="font-size:11px;color:#A32D2D;margin-top:3px;">incident' + (incidents.length > 1 ? 's' : '') + ' cette semaine</div>' +
-              '</div>' +
-            '</div>' +
-            (() => {
-              const inc = dernierIncidentSemaine;
-              const vShort = inc.vehicule.replace(/\s*\[.*?\]/, "");
-              const vPlate = (inc.vehicule.match(/\[(.+?)\]/) || [])[1] || "";
-              const photoLinks = buildPhotoLinks(inc.photo, 'margin-left:4px;font-size:11px;color:#A32D2D;text-decoration:none;display:inline-flex;align-items:center;gap:3px;', 'Photo');
-              return '<div style="font-size:9px;font-weight:600;color:#A32D2D;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px;">Dernier incident de la semaine</div>' +
-                '<div style="background:#FCEBEB;border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:6px;">' +
-                  '<div style="width:3px;height:32px;background:#E24B4A;border-radius:2px;flex-shrink:0;"></div>' +
-                  '<div style="flex:1;">' +
-                    '<div style="font-size:10px;font-weight:600;color:#A32D2D;margin-bottom:2px;">' + inc.date + " · " + inc.chauffeur + " · " + vShort + (vPlate ? " [" + vPlate + "]" : "") + '</div>' +
-                    '<div style="font-size:11px;color:#791F1F;">' + inc.desc + '</div>' +
-                  '</div>' +
-                  '<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">' + photoLinks + '</div>' +
-                '</div>';
-            })() +
-          '</div></div>'
-        :
-          '<div class="hero-card" style="background:#F0FDF4;border:0.5px solid #BBF7D0;display:flex;flex-direction:column;"><div class="hero-card-inner" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">' +
-            '<div style="width:52px;height:52px;border-radius:12px;background:#DCFCE7;display:flex;align-items:center;justify-content:center;margin-bottom:10px;">' +
-              '<i class="ti ti-circle-check" style="font-size:26px;color:#22C55E;"></i>' +
-            '</div>' +
-            '<div style="font-size:14px;font-weight:500;color:#166534;">Aucun incident</div>' +
-            '<div style="font-size:11px;color:#16A34A;margin-top:4px;">cette semaine</div>' +
-          '</div></div>'
-        ) +
+      '<div class="fleet-top">' +
+        '<div class="tile"><div class="eyebrow">Véhicule le plus utilisé</div>' +
+          '<div class="veh-name">' + esc(topV.name) + '</div>' + (topV.plate ? '<span class="plate">' + esc(topV.plate) + '</span>' : '') +
+          '<div class="veh-share"><span>Part des EDL</span><b class="num">' + topVPct + ' %</b></div>' +
+          '<div class="meter"><span style="width:' + topVPct + '%"></span></div>' +
+          '<div class="foot-note num" style="margin-top:8px">' + topVehiculeCount + ' EDL sur ' + totalSorties + '</div>' +
+        '</div>' +
+        '<div class="tile"><div class="eyebrow">Classement chauffeurs (EDL)</div>' + rankHTML + '</div>' +
+        statusHTML +
       '</div>' +
+      '<div class="eyebrow">Kilométrage par véhicule · semaine du ' + mondayLbl + '</div>' +
+      '<div style="overflow-x:auto"><table class="km-table">' +
+        '<thead><tr><th>Véhicule</th><th class="wk">Cette semaine</th><th class="r">Sem. dernière</th><th class="r hide-sm">' + monthLbl.charAt(0).toUpperCase() + monthLbl.slice(1) + '</th><th class="r hide-sm">EDL</th></tr></thead>' +
+        '<tbody>' + rowsHTML +
+        '<tr class="km-total"><td>Total flotte</td><td><div class="km-week"><span></span><b class="num">' + fmt(tW) + ' km</b></div></td><td class="r num">' + fmt(tL) + ' km</td><td class="r num hide-sm">' + fmt(tM) + ' km</td><td class="r num hide-sm">' + totalSorties + '</td></tr>' +
+        '</tbody></table></div>';
 
-      '<div class="section-label">Kilométrage de la semaine</div>' +
-      '<div class="truck-row">' + truckCardsHTML + '</div>' +
-
-      '';
 
     document.getElementById('flotte-loading').style.display = 'none';
     document.getElementById('flotte-content').style.display = 'block';
@@ -1179,55 +744,20 @@ async function loadFlotte() {
   }
 }
 
-async function loadInventaire() {
-  document.getElementById('inv-loading').style.display = 'flex';
-  document.getElementById('inv-content').style.display = 'none';
-  document.getElementById('inv-error').style.display = 'none';
-
-  try {
-    const rows = await fetchSheet(SHEET_INV, 'A:G');
-    const dataRows = rows.filter(r => r[0] && !isNaN(parseFloat(r[0])));
-    if (!dataRows.length) throw new Error('Données inventaire introuvables.');
-
-    const inv = dataRows.map(r => ({
-      pointure: r[0],
-      stock: parseInt(r[4]) || 0
-    }));
-
-    const shoeSvg = color =>
-      '<svg viewBox="0 0 64 44" aria-hidden="true" focusable="false">' +
-        '<path fill="' + color + '" d="M7 29c4.6-.7 8.2-2.9 10.8-6.7 1.4-2 2.4-4.2 3.2-6.8.5-1.5 2.1-2.3 3.5-1.6l9.8 5.1c4.9 2.6 10.1 4.5 15.5 5.7l5.3 1.2c2.2.5 3.9 2.4 3.9 4.7v2.2c0 2.1-1.5 3.9-3.6 4.3-11.8 2.4-24.1 2.4-35.9.1L8 35c-2.2-.4-3.7-2.3-3.7-4.5 0-.8.7-1.4 1.5-1.5H7z"/>' +
-        '<path fill="#fff" opacity=".9" d="M8.5 32.7c15.3 2.9 31 2.9 46.3 0 .6-.1 1.1.3 1.2.9.1.6-.3 1.1-.9 1.2-15.6 3-31.5 3-47.1 0-.6-.1-1-.7-.9-1.2.1-.6.7-1 1.4-.9z"/>' +
-      '</svg>';
-
-    const cards = inv.map(item => {
-      const isEmpty = item.stock === 0;
-      const color = isEmpty ? '#ED1C24' : '#087A24';
-      const iconCount = isEmpty ? 1 : Math.min(item.stock, 4);
-      const icons = Array.from({ length: iconCount }, () => shoeSvg(color)).join('');
-      const label = item.stock + ' paire' + (item.stock > 1 ? 's' : '');
-
-      return '<div class="shoe-size-card ' + (isEmpty ? 'empty' : 'available') + '">' +
-        '<div class="shoe-size-number">' + item.pointure + '</div>' +
-        '<div class="shoe-icons count-' + iconCount + '">' + icons + '</div>' +
-        '<div class="shoe-stock-label">' + label + '</div>' +
-      '</div>';
-    }).join('');
-
-    document.getElementById('inv-content').innerHTML =
-      '<div class="shoe-inventory-panel">' +
-        '<div class="shoe-grid">' + cards + '</div>' +
-      '</div>';
-
-    document.getElementById('inv-loading').style.display = 'none';
-    document.getElementById('inv-content').style.display = 'block';
-  } catch(e) {
-    document.getElementById('inv-loading').style.display = 'none';
-    document.getElementById('inv-error').textContent = 'Erreur : ' + e.message;
-    document.getElementById('inv-error').style.display = 'block';
-  }
+/* ---------- Bloc de comparaison réutilisable ---------- */
+function compareBlock({ bigValue, bigUnit, bigCaption, delta, deltaDigits, deltaCaption, refLabel, refValue, curLabel, curValue, unit }) {
+  const max = Math.max(refValue, curValue, 1);
+  const bar = (cls, label, value) => '<div class="cbar ' + cls + '"><span class="cbar-l">' + label + '</span>' +
+    '<span class="cbar-t"><span style="width:' + (value / max * 100) + '%"></span></span>' +
+    '<span class="cbar-v num">' + fmt(value, 2) + (unit ? ' ' + unit : '') + '</span></div>';
+  return '<div class="compare-head">' +
+      '<div class="compare-big num"><b>' + bigValue + '</b>' + (bigUnit ? '<span>' + bigUnit + '</span>' : '') + '<span class="cap">' + bigCaption + '</span></div>' +
+      '<div class="compare-delta">' + deltaChip(delta, deltaDigits) + '<span class="cap">' + deltaCaption + '</span></div>' +
+    '</div>' +
+    '<div class="cbars">' + bar('ref', refLabel, refValue) + bar('cur', curLabel, curValue) + '</div>';
 }
 
+/* ---------- TIG ---------- */
 async function loadTIG() {
   document.getElementById('tig-loading').style.display = 'flex';
   document.getElementById('tig-content').style.display = 'none';
@@ -1253,12 +783,8 @@ async function loadTIG() {
     rows.forEach(row => {
       row.forEach((cell, index) => {
         const label = String(cell ?? '').toLowerCase().replace(/\s+/g, ' ').trim();
-        if (label.includes('total heures') && label.includes('2025')) {
-          h2025 = toNumber(row[index + 1]);
-        }
-        if (label.includes('total heures') && label.includes('2026')) {
-          h2026 = toNumber(row[index + 1]);
-        }
+        if (label.includes('total heures') && label.includes('2025')) h2025 = toNumber(row[index + 1]);
+        if (label.includes('total heures') && label.includes('2026')) h2026 = toNumber(row[index + 1]);
       });
     });
 
@@ -1276,71 +802,26 @@ async function loadTIG() {
     }
 
     etpHours.tig = h2026;
+    delete hoursErrors.tig;
     updateEquivalentETP();
 
-    let evolution = '';
-    let evoColor = '#64748B';
-    if (h2025 > 0) {
-      const diff = Math.round((h2026 - h2025) / h2025 * 100);
-      if (diff > 0) { evolution = '+' + diff + '%'; evoColor = '#22C55E'; }
-      else if (diff < 0) { evolution = diff + '%'; evoColor = '#E24B4A'; }
-      else { evolution = '='; evoColor = '#64748B'; }
-    }
-    const evoIcon = h2026 >= h2025 ? '▲' : '▼';
-    const objectif = Math.max(h2025, h2026) * 1.1;
+    const delta = h2025 > 0 ? (h2026 - h2025) / h2025 * 100 : NaN;
 
-    document.getElementById('tig-content').innerHTML =
-      '<div style="background:#fff;padding:6px 10px 12px;">' +
-        '<div style="display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap;">' +
-
-          '<div style="display:flex;flex-direction:column;align-items:center;gap:14px;">' +
-            '<div style="position:relative;width:160px;height:160px;">' +
-              '<canvas id="tig-chart-2025" width="160" height="160"></canvas>' +
-              '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">' +
-                '<div style="font-size:32px;font-weight:700;color:#1A2B5E;line-height:1;">' + h2025.toLocaleString('fr-FR') + '</div>' +
-                '<div style="font-size:20px;font-weight:600;color:#1A2B5E;line-height:1.1;">heures</div>' +
-              '</div>' +
-            '</div>' +
-            '<div style="font-size:22px;font-weight:700;color:#1A2B5E;text-align:center;">2025</div>' +
-          '</div>' +
-
-          '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">' +
-            '<div style="font-size:13px;color:#94A3B8;">évolution</div>' +
-            '<div style="font-size:36px;font-weight:800;color:' + evoColor + ';line-height:1;">' + evolution + '</div>' +
-            '<div style="font-size:20px;color:' + evoColor + ';">' + evoIcon + '</div>' +
-          '</div>' +
-
-          '<div style="display:flex;flex-direction:column;align-items:center;gap:14px;">' +
-            '<div style="position:relative;width:160px;height:160px;">' +
-              '<canvas id="tig-chart-2026" width="160" height="160"></canvas>' +
-              '<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">' +
-                '<div style="font-size:32px;font-weight:700;color:#D4A017;line-height:1;">' + h2026.toLocaleString('fr-FR') + '</div>' +
-                '<div style="font-size:20px;font-weight:600;color:#1A2B5E;line-height:1.1;">heures</div>' +
-              '</div>' +
-            '</div>' +
-            '<div style="font-size:22px;font-weight:700;color:#1A2B5E;text-align:center;">2026</div>' +
-          '</div>' +
-
-        '</div>' +
-      '</div>';
+    document.getElementById('tig-content').innerHTML = compareBlock({
+      bigValue: fmt(h2026, 2), bigUnit: 'h', bigCaption: 'Heures réalisées en 2026',
+      delta, deltaDigits: 0, deltaCaption: 'par rapport à 2025',
+      refLabel: '2025', refValue: h2025, curLabel: '2026', curValue: h2026, unit: 'h'
+    });
 
     document.getElementById('tig-loading').style.display = 'none';
     document.getElementById('tig-content').style.display = 'block';
-
-    setTimeout(() => {
-      const donutOpts = (val, max, color) => ({
-        type: 'doughnut',
-        data: { datasets: [{ data: [val, Math.max(max - val, 0)], backgroundColor: [color, '#F1F5F9'], borderWidth: 0 }] },
-        options: { cutout: '75%', plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 1000 } }
-      });
-      makeChart('tig-chart-2025', donutOpts(h2025, objectif, '#1A2B5E'));
-      makeChart('tig-chart-2026', donutOpts(h2026, objectif, '#F5C842'));
-    }, 50);
 
   } catch(e) {
     document.getElementById('tig-loading').style.display = 'none';
     document.getElementById('tig-error').textContent = 'Erreur TIG : ' + e.message;
     document.getElementById('tig-error').style.display = 'block';
+    hoursErrors.tig = 'Erreur TIG : ' + e.message;
+    updateEquivalentETP();
   }
 }
 
@@ -1354,7 +835,7 @@ async function getSheetTitleByGid(spreadsheetId, gid) {
 
   if (!res.ok) {
     const detail = data?.error?.message || 'Erreur inconnue';
-    throw new Error('Impossible de retrouver l’onglet de stage : ' + detail);
+    throw new Error('Impossible de retrouver l’onglet : ' + detail);
   }
 
   const sheet = (data.sheets || []).find(item => Number(item?.properties?.sheetId) === Number(gid));
@@ -1365,11 +846,8 @@ async function getSheetTitleByGid(spreadsheetId, gid) {
   return sheet.properties.title;
 }
 
+/* ---------- Stage ---------- */
 async function loadStage() {
-  document.getElementById('stage-loading').style.display = 'flex';
-  document.getElementById('stage-content').style.display = 'none';
-  document.getElementById('stage-error').style.display = 'none';
-
   try {
     const sheetTitle = await getSheetTitleByGid(SHEET_TIG, STAGE_SHEET_GID);
     const safeTitle = sheetTitle.replace(/'/g, "''");
@@ -1380,38 +858,16 @@ async function loadStage() {
       throw new Error('La cellule M2 de l’onglet « ' + sheetTitle + ' » est vide.');
     }
 
-    const cleaned = String(rawValue)
-      .replace(/\s/g, '')
-      .replace(',', '.')
-      .replace(/[^0-9.-]/g, '');
-    const numericValue = Number.parseFloat(cleaned);
-    const displayedValue = Number.isFinite(numericValue)
-      ? numericValue.toLocaleString('fr-FR', { maximumFractionDigits: 2 })
-      : String(rawValue);
-
-    document.getElementById('stage-value').textContent = displayedValue + ' h';
-    etpHours.stage = Number.isFinite(numericValue) ? numericValue : parseHourValue(rawValue);
-    updateEquivalentETP();
-
-    document.getElementById('stage-loading').style.display = 'none';
-
+    etpHours.stage = parseHourValue(rawValue);
+    delete hoursErrors.stage;
   } catch (e) {
-    document.getElementById('stage-loading').style.display = 'none';
-    document.getElementById('stage-error').textContent = 'Erreur heures de stage : ' + e.message;
-    document.getElementById('stage-error').style.display = 'block';
+    hoursErrors.stage = 'Erreur heures de stage : ' + e.message;
   }
+  updateEquivalentETP();
 }
 
-
+/* ---------- Bénévolat (heures) ---------- */
 async function loadBenevolat() {
-  const loading = document.getElementById('benevolat-loading');
-  const content = document.getElementById('benevolat-content');
-  const error = document.getElementById('benevolat-error');
-
-  loading.style.display = 'flex';
-  content.style.display = 'none';
-  error.style.display = 'none';
-
   try {
     const sheetTitle = await getSheetTitleByGid(SHEET_BENEVOLAT, BENEVOLAT_SHEET_GID);
     const safeTitle = sheetTitle.replace(/'/g, "''");
@@ -1422,20 +878,13 @@ async function loadBenevolat() {
       throw new Error('la cellule B17 de l’onglet « ' + sheetTitle + ' » est vide.');
     }
 
-    const displayValue = String(rawValue).trim();
-    document.getElementById('benevolat-value').textContent = displayValue + ' h';
     etpHours.benevolat = parseHourValue(rawValue);
-    updateEquivalentETP();
-
-    loading.style.display = 'none';
-
+    delete hoursErrors.benevolat;
   } catch (e) {
-    loading.style.display = 'none';
-    error.textContent = 'Erreur heures de bénévolat : ' + e.message;
-    error.style.display = 'block';
+    hoursErrors.benevolat = 'Erreur heures de bénévolat : ' + e.message;
   }
+  updateEquivalentETP();
 }
-
 
 function parseVolunteerDate(value) {
   // Avec UNFORMATTED_VALUE, une vraie date Google Sheets est renvoyée sous forme
@@ -1449,7 +898,6 @@ function parseVolunteerDate(value) {
   const raw = String(value ?? '').trim();
   if (!raw) return null;
 
-  // Secours si certaines cellules sont stockées comme texte.
   let m = raw.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})(?:\s|$)/);
   if (m) {
     const d = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
@@ -1466,6 +914,7 @@ function parseVolunteerDate(value) {
   return Number.isNaN(fallback.getTime()) ? null : fallback;
 }
 
+/* ---------- Évolution des bénévoles ---------- */
 async function loadBenevolesEvolution() {
   const loading = document.getElementById('benevoles-evolution-loading');
   const content = document.getElementById('benevoles-evolution-content');
@@ -1488,78 +937,23 @@ async function loadBenevolesEvolution() {
     rows.forEach(row => {
       const raw = row?.[0];
       if (raw === undefined || raw === null || String(raw).trim() === '') return;
-
       const date = parseVolunteerDate(raw);
       if (!date) return;
-
       if (date < start2026) before2026++;
       else if (date >= start2026 && date < start2027) in2026++;
     });
 
     const currentTotal = before2026 + in2026;
-    let pctText = 'N/A';
-    let pctClass = 'neutral';
-    let arrow = '•';
+    const delta = before2026 > 0 ? (in2026 / before2026) * 100 : NaN;
 
-    if (before2026 > 0) {
-      const diff = (in2026 / before2026) * 100;
-      const rounded = Math.round(diff * 10) / 10;
-      pctText = (rounded > 0 ? '+' : '') + rounded.toLocaleString('fr-FR', { minimumFractionDigits: rounded % 1 === 0 ? 0 : 1, maximumFractionDigits: 1 }) + '%';
-      if (diff > 0) {
-        pctClass = 'positive';
-        arrow = '▲';
-      } else if (diff < 0) {
-        pctClass = 'negative';
-        arrow = '▼';
-      }
-    }
-
-    content.innerHTML =
-      '<div style="background:#fff;padding:6px 10px 12px;">' +
-        '<div style="display:flex;align-items:center;justify-content:center;gap:48px;flex-wrap:wrap;">' +
-
-          '<div style="display:flex;flex-direction:column;align-items:center;gap:14px;">' +
-            '<div style="position:relative;width:160px;height:160px;">' +
-              '<canvas id="benevoles-chart-before" width="160" height="160"></canvas>' +
-              '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">' +
-                '<div style="font-size:32px;font-weight:700;color:#1A2B5E;line-height:1;">' + before2026.toLocaleString('fr-FR') + '</div>' +
-              '</div>' +
-            '</div>' +
-            '<div style="font-size:22px;font-weight:700;color:#1A2B5E;text-align:center;">01/01/2026</div>' +
-          '</div>' +
-
-          '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">' +
-            '<div style="font-size:13px;color:#94A3B8;">évolution</div>' +
-            '<div style="font-size:36px;font-weight:800;color:' + (pctClass === 'positive' ? '#22C55E' : pctClass === 'negative' ? '#EF4444' : '#F5C842') + ';line-height:1;">' + pctText + '</div>' +
-            '<div style="font-size:20px;color:' + (pctClass === 'positive' ? '#22C55E' : pctClass === 'negative' ? '#EF4444' : '#F5C842') + ';">' + arrow + '</div>' +
-          '</div>' +
-
-          '<div style="display:flex;flex-direction:column;align-items:center;gap:14px;">' +
-            '<div style="position:relative;width:160px;height:160px;">' +
-              '<canvas id="benevoles-chart-current" width="160" height="160"></canvas>' +
-              '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">' +
-                '<div style="font-size:32px;font-weight:700;color:#D4A017;line-height:1;">' + currentTotal.toLocaleString('fr-FR') + '</div>' +
-              '</div>' +
-            '</div>' +
-            '<div style="font-size:22px;font-weight:700;color:#1A2B5E;text-align:center;">Actuel</div>' +
-          '</div>' +
-
-        '</div>' +
-      '</div>';
+    content.innerHTML = compareBlock({
+      bigValue: fmt(currentTotal), bigUnit: 'bénévoles', bigCaption: '+' + fmt(in2026) + ' nouvelle' + (in2026 > 1 ? 's' : '') + ' inscription' + (in2026 > 1 ? 's' : '') + ' en 2026',
+      delta, deltaDigits: 1, deltaCaption: 'depuis le 01/01/2026',
+      refLabel: 'Au 01/01/2026', refValue: before2026, curLabel: 'Aujourd’hui', curValue: currentTotal, unit: ''
+    });
 
     loading.style.display = 'none';
     content.style.display = 'block';
-
-    setTimeout(() => {
-      const objective = Math.max(before2026, currentTotal, 1) * 1.1;
-      const donutOpts = (val, max, color) => ({
-        type: 'doughnut',
-        data: { datasets: [{ data: [val, Math.max(max - val, 0)], backgroundColor: [color, '#F1F5F9'], borderWidth: 0 }] },
-        options: { cutout: '75%', plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 1000 } }
-      });
-      makeChart('benevoles-chart-before', donutOpts(before2026, objective, '#1A2B5E'));
-      makeChart('benevoles-chart-current', donutOpts(currentTotal, objective, '#F0C53A'));
-    }, 50);
 
   } catch (e) {
     loading.style.display = 'none';
@@ -1568,7 +962,7 @@ async function loadBenevolesEvolution() {
   }
 }
 
-
+/* ---------- Livraisons ---------- */
 function parseDeliveryNumber(value) {
   if (typeof value === 'number') return Number.isFinite(value) ? value : NaN;
   const raw = String(value ?? '').trim();
@@ -1606,30 +1000,6 @@ function extractDeliveryCityRows(rows) {
     .sort((a, b) => b.count - a.count || a.city.localeCompare(b.city, 'fr'));
 }
 
-const deliveryValueLabelsPlugin = {
-  id: 'deliveryValueLabels',
-  afterDatasetsDraw(chart) {
-    if (chart.canvas.id !== 'deliveries-city-chart') return;
-    const { ctx, chartArea } = chart;
-    const meta = chart.getDatasetMeta(0);
-    ctx.save();
-    ctx.fillStyle = '#13285F';
-    ctx.font = '700 12px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-    ctx.textBaseline = 'middle';
-    meta.data.forEach((bar, index) => {
-      const value = chart.data.datasets[0].data[index];
-      const label = Number(value).toLocaleString('fr-FR', { maximumFractionDigits: 0 });
-      const width = ctx.measureText(label).width;
-      const desiredX = bar.x + 8;
-      const x = desiredX + width <= chartArea.right ? desiredX : Math.max(chartArea.left, bar.x - width - 8);
-      ctx.textAlign = x < bar.x ? 'right' : 'left';
-      ctx.fillText(label, x, bar.y);
-    });
-    ctx.restore();
-  }
-};
-Chart.register(deliveryValueLabelsPlugin);
-
 async function loadDeliveries() {
   const loading = document.getElementById('deliveries-loading');
   const content = document.getElementById('deliveries-content');
@@ -1649,65 +1019,24 @@ async function loadDeliveries() {
     const total = parseDeliveryNumber(rawTotal);
     if (!Number.isFinite(total)) throw new Error('La cellule D12 de l’onglet « main » est vide ou invalide.');
 
-    const deliveriesByCity = extractDeliveryCityRows(cityRows);
-    if (!deliveriesByCity.length) throw new Error('Aucune donnée exploitable trouvée dans la plage F4:H15.');
+    const byCity = extractDeliveryCityRows(cityRows);
+    if (!byCity.length) throw new Error('Aucune donnée exploitable trouvée dans la plage F4:H15.');
 
-    document.getElementById('deliveries-total').textContent = total.toLocaleString('fr-FR', { maximumFractionDigits: 0 });
+    const max = byCity[0].count;
+    const sumCities = byCity.reduce((s, c) => s + c.count, 0);
+    const base = total > 0 ? total : sumCities;
 
-    const rowHeight = 36;
-    const chartHeight = Math.max(270, deliveriesByCity.length * rowHeight);
-    document.querySelector('.delivery-chart-wrap').style.height = chartHeight + 'px';
+    content.innerHTML = '<div class="hbars">' + byCity.map(c =>
+      '<div class="hbar" title="' + esc(c.city) + ' : ' + fmt(c.count) + ' livraison' + (c.count > 1 ? 's' : '') + '">' +
+        '<span class="hbar-label">' + esc(c.city) + '</span>' +
+        '<span class="hbar-track"><span style="width:' + (c.count / max * 100) + '%"></span></span>' +
+        '<span class="hbar-val"><b>' + fmt(c.count) + '</b>' + pctOf(c.count, base) + ' %</span>' +
+      '</div>').join('') + '</div>';
 
-    makeChart('deliveries-city-chart', {
-      type: 'bar',
-      data: {
-        labels: deliveriesByCity.map(item => item.city),
-        datasets: [{
-          label: 'Livraisons',
-          data: deliveriesByCity.map(item => item.count),
-          backgroundColor: '#2A3E8F',
-          hoverBackgroundColor: '#1A2B5E',
-          borderWidth: 0,
-          borderRadius: 7,
-          borderSkipped: false,
-          barThickness: 18,
-          maxBarThickness: 22
-        }]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        maintainAspectRatio: false,
-        layout: { padding: { right: 42, left: 2, top: 2, bottom: 0 } },
-        animation: { duration: 800 },
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            displayColors: false,
-            callbacks: {
-              label: context => context.raw.toLocaleString('fr-FR') + ' livraison' + (context.raw > 1 ? 's' : '')
-            }
-          }
-        },
-        scales: {
-          x: {
-            beginAtZero: true,
-            grace: '12%',
-            grid: { color: '#E8EDF5', drawBorder: false },
-            border: { display: false },
-            ticks: { color: '#64748B', precision: 0, font: { size: 11 } }
-          },
-          y: {
-            grid: { display: false },
-            border: { display: false },
-            ticks: { color: '#13285F', font: { size: 12, weight: '600' }, autoSkip: false }
-          }
-        }
-      }
-    });
+    document.getElementById('deliveries-meta').innerHTML = '<b class="num">' + fmt(total) + '</b>livraisons';
 
     loading.style.display = 'none';
-    content.style.display = 'grid';
+    content.style.display = 'block';
   } catch (e) {
     loading.style.display = 'none';
     error.textContent = 'Erreur livraisons : ' + e.message;
@@ -1716,28 +1045,13 @@ async function loadDeliveries() {
 }
 
 async function loadAll() {
-  document.getElementById('last-update').textContent = 'Actualisation...';
-  await Promise.all([loadFlotte(), loadDeliveries(), loadInventaire(), loadTIG(), loadStage(), loadBenevolat(), loadBenevolesEvolution()]);
+  document.getElementById('last-update').textContent = 'Actualisation…';
+  await Promise.all([loadFlotte(), loadDeliveries(), loadTIG(), loadStage(), loadBenevolat(), loadBenevolesEvolution()]);
   const now = new Date();
-  document.getElementById('last-update').textContent = now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
+  document.getElementById('last-update').textContent = 'Mis à jour à ' + now.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit'});
 }
 
 loadAll();
-
-
-function forceBenevolesEvolutionPosition() {
-  const tigSection = document.querySelector('.dashboard-section-tig');
-  const evolutionSection = document.getElementById('benevoles-evolution-section');
-  if (!tigSection || !evolutionSection) return;
-
-  if (tigSection.nextElementSibling !== evolutionSection) {
-    tigSection.insertAdjacentElement('afterend', evolutionSection);
-  }
-}
-
-document.addEventListener('DOMContentLoaded', forceBenevolesEvolutionPosition);
-window.addEventListener('load', forceBenevolesEvolutionPosition);
-
 </script>
 </body>
 </html>
