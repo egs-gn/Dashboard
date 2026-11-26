@@ -95,7 +95,7 @@ body {
 .error-box { background: var(--bad-bg); color: var(--bad); border-radius: 10px; padding: 12px 14px; font-size: 13px; }
 
 /* ---------- Flotte ---------- */
-.fleet-top { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 14px; margin-bottom: 22px; }
+.fleet-top { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
 .tile { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; min-width: 0; }
 .veh-name { font-size: 17px; font-weight: 700; color: var(--navy); margin-top: 2px; }
 .brand { flex: 1; min-width: 0; }
@@ -176,7 +176,7 @@ body {
 #panel-hours { display: flex; flex-direction: column; }
 #hours-content { flex: 1; display: flex; flex-direction: column; }
 #hours-content .etp-row { margin-top: auto; padding-top: 18px; }
-.km-table th.wk { width: 34%; }
+.km-table th.wk { width: 42%; }
 .etp { border-radius: 12px; padding: 12px 14px; background: #F7F9FC; border: 1px solid var(--line); }
 .etp.main { background: var(--navy-2); border-color: var(--navy-2); color: #fff; }
 .etp-v { font-size: 26px; font-weight: 700; letter-spacing: -.6px; color: var(--navy); line-height: 1.1; }
@@ -664,16 +664,6 @@ async function loadFlotte() {
     const topVPct = pctOf(topVehiculeKm, Math.round(kmFlotteTotal));
 
     /* -- Rendu -- */
-    const top = [...chauffeurLabels].sort((a,b) => chauffeurs[b]-chauffeurs[a]).slice(0,5);
-    const topMax = top.length ? chauffeurs[top[0]] : 1;
-    const rankHTML = '<div class="rank">' + top.map((c, i) =>
-      '<div class="rank-row" title="' + esc(c) + ' : ' + chauffeurs[c] + ' EDL">' +
-        '<span class="rank-pos">' + (i + 1) + '</span>' +
-        '<span class="rank-name">' + esc(c.split(' ')[0]) + '</span>' +
-        '<span class="rank-bar"><span style="width:' + (chauffeurs[c] / topMax * 100) + '%"></span></span>' +
-        '<span class="rank-val num"><b>' + chauffeurs[c] + '</b> EDL</span>' +
-      '</div>').join('') + '</div>';
-
     const buildPhotoLinks = photoStr => {
       if (!photoStr) return '';
       const list = String(photoStr).split(',').map(s => s.trim()).filter(Boolean);
@@ -699,22 +689,20 @@ async function loadFlotte() {
 
     const sorted = [...vehiculeLabels].sort((a, b) => (kmSemaine[b] - kmSemaine[a]) || (kmMois[b] - kmMois[a]));
     const maxWeek = Math.max(1, ...sorted.map(v => kmSemaine[v]));
-    let tW = 0, tL = 0, tM = 0, tT = 0;
+    let tW = 0, tM = 0, tT = 0;
     const rowsHTML = sorted.map(v => {
-      const kS = Math.round(kmSemaine[v] || 0), kL = Math.round(kmSemaineDerniere[v] || 0), kM = Math.round(kmMois[v] || 0), kT = Math.round(kmTotal[v] || 0);
-      tW += kS; tL += kL; tM += kM; tT += kT;
-      const idle = kS === 0 && kL === 0 && kM === 0;
+      const kS = Math.round(kmSemaine[v] || 0), kM = Math.round(kmMois[v] || 0), kT = Math.round(kmTotal[v] || 0);
+      tW += kS; tM += kM; tT += kT;
+      const idle = kS === 0 && kM === 0;
       const vv = splitVeh(v);
       return '<tr class="' + (idle ? 'idle' : '') + '">' +
         '<td><div class="km-veh"><i class="ti ti-truck"></i><div><b>' + esc(vv.name) + '</b>' + (vv.plate ? '<span class="plate">' + esc(vv.plate) + '</span>' : '') + '</div></div></td>' +
         '<td><div class="km-week"><div class="meter"><span style="width:' + (kS / maxWeek * 100) + '%"></span></div><b class="num">' + fmt(kS) + ' km</b></div></td>' +
-        '<td class="r num">' + fmt(kL) + ' km</td>' +
         '<td class="r num hide-sm">' + fmt(kM) + ' km</td>' +
         '<td class="r num">' + fmt(kT) + ' km</td>' +
       '</tr>';
     }).join('');
 
-    const mondayLbl = monday.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
     const monthLbl = now.toLocaleDateString('fr-FR', { month: 'long' });
 
     document.getElementById('flotte-content').innerHTML =
@@ -725,14 +713,12 @@ async function loadFlotte() {
           '<div class="meter"><span style="width:' + topVPct + '%"></span></div>' +
           '<div class="foot-note num" style="margin-top:8px">' + fmt(topVehiculeKm) + ' km sur ' + fmt(Math.round(kmFlotteTotal)) + ' km depuis le début</div>' +
         '</div>' +
-        '<div class="tile"><div class="eyebrow">Classement chauffeurs (EDL)</div>' + rankHTML + '</div>' +
         statusHTML +
       '</div>' +
-      '<div class="eyebrow">Kilométrage par véhicule · semaine du ' + mondayLbl + '</div>' +
       '<div style="overflow-x:auto"><table class="km-table">' +
-        '<thead><tr><th>Véhicule</th><th class="wk">Cette semaine</th><th class="r">Sem. dernière</th><th class="r hide-sm">' + monthLbl.charAt(0).toUpperCase() + monthLbl.slice(1) + '</th><th class="r">Total</th></tr></thead>' +
+        '<thead><tr><th>Véhicule</th><th class="wk">Cette semaine</th><th class="r hide-sm">' + monthLbl.charAt(0).toUpperCase() + monthLbl.slice(1) + '</th><th class="r">Total</th></tr></thead>' +
         '<tbody>' + rowsHTML +
-        '<tr class="km-total"><td>Total flotte</td><td><div class="km-week"><span></span><b class="num">' + fmt(tW) + ' km</b></div></td><td class="r num">' + fmt(tL) + ' km</td><td class="r num hide-sm">' + fmt(tM) + ' km</td><td class="r num">' + fmt(tT) + ' km</td></tr>' +
+        '<tr class="km-total"><td>Total flotte</td><td><div class="km-week"><span></span><b class="num">' + fmt(tW) + ' km</b></div></td><td class="r num hide-sm">' + fmt(tM) + ' km</td><td class="r num">' + fmt(tT) + ' km</td></tr>' +
         '</tbody></table></div>';
 
 
